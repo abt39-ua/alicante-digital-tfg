@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Alicante Digital - Login</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1193d4",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101c22",
+                        "foreground-light": "#111618",
+                        "foreground-dark": "#dde8ed",
+                        "subtle-light": "#617c89",
+                        "subtle-dark": "#a0b8c3",
+                        "input-light": "#e3e8eb",
+                        "input-dark": "#1c2c35"
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex flex-col min-h-screen">
+<header class="border-b border-input-light dark:border-input-dark">
+<div class="container mx-auto px-6 py-4">
+<a href="/" class="flex items-center gap-3 text-primary hover:opacity-80 transition">
+    <svg class="h-8 w-8 text-primary" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path>
+        <path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path>
+    </svg>
+    <h1 class="text-xl font-bold">Alicante Digital</h1>
+</a>
+</div>
+</header>
+<main class="flex flex-1 items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+<div class="w-full max-w-md space-y-8">
+<div>
+<h2 class="mt-6 text-center text-3xl font-extrabold text-foreground-light dark:text-foreground-dark">
+                    Acceso para Municipios
+                </h2>
+<p class="mt-2 text-center text-sm text-subtle-light dark:text-subtle-dark">
+                    Inicia sesión para acceder a tu panel de control.
+                </p>
+</div>
+<div class="rounded-lg bg-white dark:bg-background-dark p-8 shadow-sm border border-input-light dark:border-input-dark">
+<form action="#" class="space-y-6" method="POST">
+<div>
+  <label class="sr-only" for="codigo">Código del Ayuntamiento</label>
+  <input
+    autocomplete="codigo"
+    class="relative block w-full appearance-none rounded-lg border-2 border-input-light dark:border-input-dark bg-background-light dark:bg-input-dark px-3 py-3 text-foreground-light dark:text-foreground-dark placeholder-subtle-light dark:placeholder-subtle-dark focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
+    id="codigo"
+    name="codigo"
+    placeholder="Código del Ayuntamiento"
+    required
+    type="text"
+  />
+</div>
+
+<div>
+<label class="sr-only" for="password">Contraseña</label>
+<input autocomplete="current-password" class="relative block w-full appearance-none rounded-lg border-2 border-input-light dark:border-input-dark bg-background-light dark:bg-input-dark px-3 py-3 text-foreground-light dark:text-foreground-dark placeholder-subtle-light dark:placeholder-subtle-dark focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm" id="password" name="password" placeholder="Contraseña" required="" type="password"/>
+</div>
+<div class="flex items-center justify-end">
+<div class="text-sm">
+<a class="font-medium text-primary hover:text-primary/80" href="#">
+                                ¿Has olvidado tu contraseña?
+                            </a>
+</div>
+</div>
+<div>
+<button class="group relative flex w-full justify-center rounded-lg border border-transparent bg-primary py-3 px-4 text-sm font-semibold text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark" type="submit">
+                            Iniciar sesión
+                        </button>
+</div>
+</form>
+</div>
+<p class="mt-4 text-center text-xs text-subtle-light dark:text-subtle-dark">
+                Plataforma de Digitalización para los Municipios de Alicante.
+            </p>
+</div>
+</main>
+</div>
+
+</body></html>
