@@ -74,3 +74,37 @@ with app.app_context():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+from flask import jsonify
+from sqlalchemy import func
+
+ZONAS = {
+    "Marina Alta": ["Dénia", "Xàbia", "Calp", "Teulada", "Benissa"],
+    "Marina Baixa": ["Benidorm", "Altea", "La Nucía", "Polop"],
+    "Vinalopó": ["Elche", "Elda", "Petrer", "Novelda", "Aspe"],
+    "L'Alacantí": ["Alicante", "San Vicente", "Mutxamel", "Sant Joan"],
+    "Vega Baja": ["Orihuela", "Torrevieja", "Guardamar", "Pilar de la Horadada"]
+}
+
+@app.route("/api/digitalizacion-zonas")
+def digitalizacion_por_zonas():
+    resultado = []
+
+    for zona, ayuntamientos in ZONAS.items():
+        registros = Ayuntamiento.query.filter(
+            Ayuntamiento.nombre.in_(ayuntamientos)
+        ).all()
+
+        if not registros:
+            continue
+
+        media = sum(a.nivel_digitalizacion for a in registros) / len(registros)
+
+        resultado.append({
+            "zona": zona,
+            "media": round(media, 2),
+            "ayuntamientos": [a.nombre for a in registros]
+        })
+
+    return jsonify(resultado)

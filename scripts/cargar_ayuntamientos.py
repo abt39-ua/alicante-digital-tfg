@@ -1,15 +1,9 @@
 """
-SCRIPT DE CARGA / REGENERACIÓN DE AYUNTAMIENTOS
+Carga completa de ayuntamientos desde Sensitivity_Analysis.xlsx
 
-- Lee los ayuntamientos desde el Excel original del TFG
-- Genera códigos (001, 002, ...)
-- Genera contraseñas aleatorias
-- Guarda todo en la base de datos (remota o local)
-
-USAR CUANDO:
-- Se pierde la base de datos (Render free)
-- Se redepliega el proyecto
-- Se empieza desde cero
+- Guarda todas las dimensiones de digitalización
+- Genera códigos y contraseñas
+- Pensado para regenerar la BD cuando se pierda (Render free)
 
 EJECUTAR:
 python scripts/cargar_ayuntamientos.py
@@ -17,7 +11,9 @@ python scripts/cargar_ayuntamientos.py
 
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, BASE_DIR)
 
 import pandas as pd
 import random
@@ -28,11 +24,22 @@ from models import db, Ayuntamiento
 
 
 EXCEL_FILE = "Sensitivity_Analysis.xlsx"
-COLUMN_NAME = "AYUNTAMIENTO"
+
+COLUMN_MAP = {
+    "AYUNTAMIENTO": "nombre",
+    "comunicaciones": "comunicaciones",
+    "backoffice": "backoffice",
+    "puestos de trabajo": "puestos_trabajo",
+    "frontoffice": "frontoffice",
+    "smart city": "smart_city",
+    "DTI": "dti",
+    "planes": "planes",
+    "TOTAL": "total"
+}
 
 
-def generar_codigo(numero):
-    return f"{numero:03d}"
+def generar_codigo(n):
+    return f"{n:03d}"
 
 
 def generar_password():
@@ -41,51 +48,42 @@ def generar_password():
 
 
 def run():
-    if not os.path.exists(EXCEL_FILE):
-        print(f"❌ ERROR: No se encuentra el archivo {EXCEL_FILE}")
-        return
-
     df = pd.read_excel(EXCEL_FILE)
 
-    if COLUMN_NAME not in df.columns:
-        print(f"❌ ERROR: La columna '{COLUMN_NAME}' no existe en el Excel.")
-        return
-
-    print("📥 Importando ayuntamientos desde Excel...\n")
+    print("📥 Cargando ayuntamientos desde Excel...\n")
 
     with app.app_context():
-        # ⚠️ BORRADO TOTAL (solo para regeneración)
         db.session.query(Ayuntamiento).delete()
         db.session.commit()
 
         credenciales = []
 
-        for index, row in df.iterrows():
-            nombre = str(row[COLUMN_NAME]).strip()
-            codigo = generar_codigo(index + 1)
+        for idx, row in df.iterrows():
+            data = {}
 
-            password_plano = generar_password()
-            password_hash = generate_password_hash(password_plano)
+            for excel_col, model_col in COLUMN_MAP.items():
+                data[model_col] = float(row[excel_col]) if excel_col != "AYUNTAMIENTO" else str(row[excel_col]).strip()
+
+            pwd = generar_password()
 
             ayto = Ayuntamiento(
-                codigo=codigo,
-                nombre=nombre,
-                password_hash=password_hash,
-                nivel_digitalizacion=0
+                codigo=generar_codigo(idx + 1),
+                password_hash=generate_password_hash(pwd),
+                **data
             )
 
             db.session.add(ayto)
-            credenciales.append((codigo, nombre, password_plano))
+            credenciales.append((ayto.codigo, ayto.nombre, pwd))
 
         db.session.commit()
 
-    print("✅ Importación completada.\n")
-    print("🔑 CREDENCIALES GENERADAS (GUÁRDALAS):\n")
+    print("✅ Importación completada\n")
+    print("🔑 CREDENCIALES GENERADAS:\n")
 
-    for codigo, nombre, password in credenciales:
-        print(f"{codigo}  |  {nombre}  |  {password}")
+    for c, n, p in credenciales:
+        print(f"{c} | {n} | {p}")
 
-    print("\n💾 Guarda esta información en un archivo seguro.\n")
+    print("\n💾 Guarda estas contraseñas en un lugar seguro.\n")
 
 
 if __name__ == "__main__":
