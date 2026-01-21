@@ -203,20 +203,42 @@
 </div>
 
 <script>
+const zonas = {
+  "L'Alacantí": [
+    "Alicante", "San Vicente del Raspeig", "San Juan", "Mutxamel",
+    "El Campello", "Agost", "Busot"
+  ],
+  "Vega Baja": [
+    "Orihuela", "Torrevieja", "Pilar de la Horadada", "Guardamar",
+    "Almoradí", "Callosa de Segura", "Rojales", "Benejúzar",
+    "Dolores", "San Fulgencio", "Catral", "Bigastro"
+  ],
+  "Marina Alta": [
+    "Dénia", "Xàbia", "Calp", "Teulada", "Benissa",
+    "Gata de Gorgos", "Pedreguer", "Ondara", "El Verger"
+  ],
+  "Marina Baixa": [
+    "Benidorm", "Altea", "La Nucía", "Polop",
+    "Callosa d'en Sarrià", "Finestrat", "L'Alfàs del Pi"
+  ],
+  "Vinalopó": [
+    "Elche", "Elda", "Petrer", "Novelda", "Aspe",
+    "Monóvar", "Villena", "Sax", "Biar", "Pinoso"
+  ]
+};
+
+const labels = Object.keys(zonas);
+const valores = Object.values(zonas).map(z => z.length);
+const total = valores.reduce((a, b) => a + b, 0);
+
 const ctx = document.getElementById('zonasChart');
 
 new Chart(ctx, {
   type: 'doughnut',
   data: {
-    labels: [
-      "L'Alacantí",
-      "Vega Baja",
-      "Marina Alta",
-      "Marina Baixa",
-      "Vinalopó"
-    ],
+    labels: labels,
     datasets: [{
-      data: [18, 22, 14, 12, 13],
+      data: valores,
       backgroundColor: [
         "#1193d4",
         "#34d399",
@@ -236,14 +258,14 @@ new Chart(ctx, {
       tooltip: {
         callbacks: {
           label: function(context) {
-            const municipios = {
-              "L'Alacantí": ["Alicante", "San Vicente", "San Juan", "Mutxamel"],
-              "Vega Baja": ["Orihuela", "Torrevieja", "Pilar de la Horadada"],
-              "Marina Alta": ["Dénia", "Xàbia", "Calp"],
-              "Marina Baixa": ["Benidorm", "Altea", "La Nucía"],
-              "Vinalopó": ["Elche", "Elda", "Petrer"]
-            };
-            return context.label + ": " + municipios[context.label].join(", ");
+            const zona = context.label;
+            const num = context.raw;
+            const porcentaje = ((num / total) * 100).toFixed(1);
+
+            return [
+              `${zona}: ${porcentaje}% (${num} ayuntamientos)`,
+              `Municipios: ${zonas[zona].join(", ")}`
+            ];
           }
         }
       }
@@ -251,5 +273,6 @@ new Chart(ctx, {
   }
 });
 </script>
+
 
 </body></html>
