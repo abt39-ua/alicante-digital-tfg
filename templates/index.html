@@ -5,6 +5,10 @@
 <title>Alicante Digital</title>
 <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
 <script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Chart.js (NECESARIO para el gráfico circular) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
 <script>
   tailwind.config = {
     darkMode: "class",
@@ -39,6 +43,7 @@
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
     </style>
+
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
 <div class="flex flex-col min-h-screen">
@@ -75,6 +80,7 @@
 </div>
 </div>
 </header>
+
 <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
 <div class="max-w-7xl mx-auto">
 <div class="text-center mb-12">
@@ -152,6 +158,7 @@
 <span>+4% vs LY</span>
 </p>
 </div>
+
 <div class="bg-primary/10 dark:bg-primary/20 rounded-xl p-6">
 <p class="font-semibold text-gray-800 dark:text-gray-200">Digital Infrastructure</p>
 <p class="text-3xl font-bold text-primary mt-1">90%</p>
@@ -161,6 +168,22 @@
 </p>
 </div>
 </div>
+
+<section class="mb-16">
+  <h2 class="text-2xl font-bold mb-6 text-center">
+    Digitalización por Zonas de la Provincia
+  </h2>
+
+  <div class="bg-white dark:bg-background-dark rounded-xl p-6 shadow-md max-w-xl mx-auto">
+    <canvas id="zonasChart"></canvas>
+    <p class="text-sm text-gray-500 dark:text-gray-400 mt-4 text-center">
+      Pasa el ratón por cada zona para ver los municipios incluidos
+    </p>
+  </div>
+</section>
+
+
+
 <div class="bg-white dark:bg-background-dark rounded-xl shadow-md overflow-hidden">
 <div class="md:flex">
 <div class="md:w-1/2 p-8 flex flex-col justify-center">
@@ -178,5 +201,55 @@
 </div>
 </main>
 </div>
+
+<script>
+const ctx = document.getElementById('zonasChart');
+
+new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    labels: [
+      "L'Alacantí",
+      "Vega Baja",
+      "Marina Alta",
+      "Marina Baixa",
+      "Vinalopó"
+    ],
+    datasets: [{
+      data: [18, 22, 14, 12, 13],
+      backgroundColor: [
+        "#1193d4",
+        "#34d399",
+        "#fbbf24",
+        "#a78bfa",
+        "#fb7185"
+      ],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "bottom"
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const municipios = {
+              "L'Alacantí": ["Alicante", "San Vicente", "San Juan", "Mutxamel"],
+              "Vega Baja": ["Orihuela", "Torrevieja", "Pilar de la Horadada"],
+              "Marina Alta": ["Dénia", "Xàbia", "Calp"],
+              "Marina Baixa": ["Benidorm", "Altea", "La Nucía"],
+              "Vinalopó": ["Elche", "Elda", "Petrer"]
+            };
+            return context.label + ": " + municipios[context.label].join(", ");
+          }
+        }
+      }
+    }
+  }
+});
+</script>
 
 </body></html>
