@@ -9,6 +9,10 @@
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
+<!-- MAPA -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <!-- Plugin para mostrar porcentajes -->
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
@@ -94,215 +98,392 @@
                     </p>
 </div>
 <div class="mb-8">
+
+  <!-- HERO MEDIA -->
+
+<div class="bg-white dark:bg-background-dark rounded-xl p-10 shadow-md text-center mb-10">
+
+<p class="text-lg text-gray-500">
+Nivel medio de digitalización de la provincia
+</p>
+
+<h2 class="text-6xl font-extrabold text-primary my-4">
+<span id="mediaDigitalizacion">--</span>
+</h2>
+
+<p class="text-gray-500">
+Municipio líder: <span id="lider"></span>
+</p>
+
+</div>
 <label class="relative">
 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary">search</span>
 <input class="form-input w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-gray-800 dark:text-gray-200 bg-background-light dark:bg-background-dark border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary h-14 placeholder:text-gray-500 dark:placeholder:text-gray-400 pl-12 pr-4 text-base shadow-sm" placeholder="Ask our AI: e.g., 'Compare digitalization in Elche and Benidorm'" type="search"/>
 </label>
 </div>
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-<div class="bg-white dark:bg-background-dark rounded-xl p-6 shadow-md">
-<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Digitalization Index Over Time</h3>
-<p class="text-3xl font-bold text-primary">75%</p>
-<div class="flex items-center gap-2 text-sm">
-<span class="text-gray-500 dark:text-gray-400">Last 12 Months</span>
-<span class="flex items-center text-green-500 font-medium">
-<span class="material-symbols-outlined text-base">arrow_upward</span>
-<span>+5%</span>
-</span>
-</div>
-<div class="h-48 mt-4">
-<svg fill="none" height="100%" preserveAspectRatio="none" viewBox="0 0 472 150" width="100%" xmlns="http://www.w3.org/2000/svg">
-<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V149H0V109Z" fill="url(#paint0_linear_chart)"></path>
-<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#1193d4" stroke-linecap="round" stroke-width="3"></path>
-<defs>
-<linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_chart" x1="236" x2="236" y1="1" y2="149">
-<stop stop-color="#1193d4" stop-opacity="0.2"></stop>
-<stop offset="1" stop-color="#1193d4" stop-opacity="0"></stop>
-</linearGradient>
-</defs>
-</svg>
-</div>
-</div>
-<div class="bg-white dark:bg-background-dark rounded-xl p-6 shadow-md">
-<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Municipality Comparison</h3>
-<p class="text-3xl font-bold text-primary">Average: 68%</p>
-<div class="flex items-center gap-2 text-sm">
-<span class="text-gray-500 dark:text-gray-400">Current Year</span>
-<span class="flex items-center text-green-500 font-medium">
-<span class="material-symbols-outlined text-base">arrow_upward</span>
-<span>+3%</span>
-</span>
-</div>
-<div class="grid grid-cols-7 gap-4 items-end h-48 mt-4 px-2">
-<div class="flex flex-col items-center gap-2 h-full justify-end"><div class="w-full bg-primary/20 dark:bg-primary/40 rounded-t-lg" style="height: 20%;"></div><p class="text-xs text-center text-gray-500 dark:text-gray-400">Elche</p></div>
-<div class="flex flex-col items-center gap-2 h-full justify-end"><div class="w-full bg-primary rounded-t-lg" style="height: 80%;"></div><p class="text-xs text-center font-bold text-primary">Alicante</p></div>
-<div class="flex flex-col items-center gap-2 h-full justify-end"><div class="w-full bg-primary/20 dark:bg-primary/40 rounded-t-lg" style="height: 60%;"></div><p class="text-xs text-center text-gray-500 dark:text-gray-400">Torrevieja</p></div>
-<div class="flex flex-col items-center gap-2 h-full justify-end"><div class="w-full bg-primary/20 dark:bg-primary/40 rounded-t-lg" style="height: 10%;"></div><p class="text-xs text-center text-gray-500 dark:text-gray-400">Orihuela</p></div>
-<div class="flex flex-col items-center gap-2 h-full justify-end"><div class="w-full bg-primary/20 dark:bg-primary/40 rounded-t-lg" style="height: 70%;"></div><p class="text-xs text-center text-gray-500 dark:text-gray-400">Benidorm</p></div>
-<div class="flex flex-col items-center gap-2 h-full justify-end"><div class="w-full bg-primary/20 dark:bg-primary/40 rounded-t-lg" style="height: 30%;"></div><p class="text-xs text-center text-gray-500 dark:text-gray-400">Alcoy</p></div>
-<div class="flex flex-col items-center gap-2 h-full justify-end"><div class="w-full bg-primary/20 dark:bg-primary/40 rounded-t-lg" style="height: 50%;"></div><p class="text-xs text-center text-gray-500 dark:text-gray-400">S. Vicente</p></div>
-</div>
-</div>
-</div>
-<h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Key Digitalization Metrics</h2>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-<div class="bg-primary/10 dark:bg-primary/20 rounded-xl p-6">
-<p class="font-semibold text-gray-800 dark:text-gray-200">Citizen Engagement</p>
-<p class="text-3xl font-bold text-primary mt-1">82%</p>
-<p class="text-sm text-green-500 font-medium flex items-center gap-1">
-<span class="material-symbols-outlined text-base">arrow_upward</span>
-<span>+7% vs LY</span>
-</p>
-</div>
-<div class="bg-primary/10 dark:bg-primary/20 rounded-xl p-6">
-<p class="font-semibold text-gray-800 dark:text-gray-200">Online Service Adoption</p>
-<p class="text-3xl font-bold text-primary mt-1">65%</p>
-<p class="text-sm text-green-500 font-medium flex items-center gap-1">
-<span class="material-symbols-outlined text-base">arrow_upward</span>
-<span>+4% vs LY</span>
-</p>
-</div>
 
-<div class="bg-primary/10 dark:bg-primary/20 rounded-xl p-6">
-<p class="font-semibold text-gray-800 dark:text-gray-200">Digital Infrastructure</p>
-<p class="text-3xl font-bold text-primary mt-1">90%</p>
-<p class="text-sm text-green-500 font-medium flex items-center gap-1">
-<span class="material-symbols-outlined text-base">arrow_upward</span>
-<span>+6% vs LY</span>
-</p>
-</div>
-</div>
+<!-- ================= NUEVOS GRÁFICOS REALES ================= -->
 
-<section class="mb-16">
-  <h2 class="text-2xl font-bold mb-6 text-center">
-    Digitalización por Zonas de la Provincia
-  </h2>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
 
-  <div class="bg-white dark:bg-background-dark rounded-xl p-6 shadow-md max-w-xl mx-auto">
-    <canvas id="zonasChart"></canvas>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mt-4 text-center">
-      Pasa el ratón por cada zona para ver los municipios incluidos
-    </p>
-  </div>
-</section>
+  <!-- RANKING -->
+<div class="bg-white rounded-xl p-6 shadow-md">
+
+<h3 class="text-lg font-semibold mb-4">
+Top 10 ayuntamientos
+</h3>
+
+<canvas id="rankingChart"></canvas>
+
+</div>
 
 
 
-<div class="bg-white dark:bg-background-dark rounded-xl shadow-md overflow-hidden">
-<div class="md:flex">
-<div class="md:w-1/2 p-8 flex flex-col justify-center">
-<h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Municipality Spotlight</h2>
-<p class="text-lg font-semibold text-primary">Elche Leads in Digital Transformation</p>
-<p class="text-gray-600 dark:text-gray-400 mt-2">
-                                Elche has shown significant progress in citizen engagement and online service adoption, setting a benchmark for other municipalities.
-                            </p>
+<!-- DISTRIBUCION -->
+<div class="bg-white rounded-xl p-6 shadow-md">
+
+<h3 class="text-lg font-semibold mb-4">
+Distribución de madurez digital
+</h3>
+
+<canvas id="distribucionChart"></canvas>
+
 </div>
-<div class="md:w-1/2">
-<div class="h-64 md:h-full w-full bg-center bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBhEeAPHz0TI3bZhvnRZAcD5pEYAywzc4MNQktjV5-g-jxxaimIysVG_nraZ8tcQhJjBPvy27OOeDyogfz3fJ5wAdkMPKDMffbZvHnecvWh4Hx5TAlcR8cIDn0cOouhPd4HnkL6eomuU51pPwv7Y9jcBZcgRc-3jSEag2umvuqckrCUXiFNel5gxdX_S82KvazdXnoG4IfnpaVbjxZQxCrQD6IXBp__PstiJNnri04mBZ0QC0PsUSlWfSSAsh1sFqvJcu59tkVraWJc");'></div>
+
 </div>
+
+
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+
+<!-- MAPA (SUSTITUYE A MEDIA CHART) -->
+<div class="bg-white rounded-xl p-6 shadow-md">
+
+<h3 class="text-lg font-semibold mb-4">
+Mapa de digitalización
+</h3>
+
+<div id="map" style="height:400px;border-radius:12px;"></div>
+
 </div>
+
+
+<!-- AREAS -->
+<div class="bg-white rounded-xl p-6 shadow-md">
+
+<h3 class="text-lg font-semibold mb-4">
+Media por áreas tecnológicas
+</h3>
+
+<canvas id="areasChart" style="max-height:320px;"></canvas>
+
+
 </div>
+
 </div>
+
+
+
+<!-- ZONAS -->
+<div class="bg-white rounded-xl p-6 shadow-md max-w-xl mx-auto">
+
+<h3 class="text-lg font-semibold mb-4 text-center">
+Digitalización por zonas
+</h3>
+
+<canvas id="zonasChart"></canvas>
+
+</div>
+
+</div>
+
+
+
 </main>
 </div>
 
+
+
+<!-- ================= JS ================= -->
+
 <script>
-const zonas = {
-  "L’Alacantí": [
-    "Alicante", "San Vicente del Raspeig", "San Juan", "Mutxamel",
-    "El Campello", "Aigües", "Busot"
-  ],
-  "Vinalopó": [
-    "Elche", "Elda", "Petrer", "Novelda", "Monóvar", "Aspe",
-    "Sax", "Villena", "Pinoso", "Hondón de las Nieves",
-    "Hondón de los Frailes", "Salinas"
-  ],
-  "Vega Baja": [
-    "Orihuela", "Torrevieja", "Guardamar", "Pilar de la Horadada",
-    "Rojales", "Almoradí", "Callosa de Segura", "Dolores",
-    "Cox", "Catral", "Redován", "Bigastro", "San Fulgencio",
-    "Formentera del Segura", "Daya Vieja", "Daya Nueva",
-    "Algorfa", "Benejúzar", "Benferri", "Rafal"
-  ],
-  "Marina Alta": [
-    "Dénia", "Jávea", "Calpe", "Teulada", "Benissa", "Pego",
-    "Gata de Gorgos", "Ondara", "Pedreguer", "El Verger",
-    "Els Poblets", "Beniarbeig", "Orba", "Alcalalí",
-    "Parcent", "Benigembla", "Murla", "Sanet y Negrals"
-  ],
-  "Marina Baixa": [
-    "Benidorm", "Altea", "La Nucía", "Alfaz del Pi", "Polop",
-    "Callosa d’en Sarrià", "Finestrat", "Bolulla", "Tàrbena",
-    "Castell de Guadalest", "Beniardà", "Benifato",
-    "Confrides", "Relleu", "Sella", "Orxeta"
-  ],
-  "Interior / Alcoià – Comtat": [
-    "Alcoy", "Ibi", "Cocentaina", "Muro", "Banyeres",
-    "Castalla", "Onil", "Agres", "Biar", "Beneixama",
-    "Planes", "L’Orxa", "Quatretondeta", "Benilloba",
-    "Benimarfull", "Benifallim", "Tollos"
-  ]
+
+async function cargarTodo(){
+
+/*************** MEDIA ***************/
+const mediaRes = await fetch("/api/media-digitalizacion");
+const media = await mediaRes.json();
+
+document.getElementById("mediaDigitalizacion").innerText =
+media.media + "%";
+
+document.getElementById("lider").innerText =
+media.max.nombre + " (" + media.max.valor + "%)";
+
+
+
+/*************** MAPA ***************/
+const map = L.map('map').setView([38.3452,-0.481],9);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+maxZoom:19
+}).addTo(map);
+
+// Ejemplo marcadores (puedes ampliarlos luego)
+const ciudades = [
+["Alicante",38.3452,-0.481],
+["Elche",38.2699,-0.712],
+["Benidorm",38.541,-0.122],
+["Alcoy",38.698,-0.473]
+];
+
+ciudades.forEach(c=>{
+L.marker([c[1],c[2]])
+.addTo(map)
+.bindPopup(c[0]);
+});
+
+
+/*************** DISTRIBUCION ***************/
+const distRes = await fetch("/api/distribucion");
+const dist = await distRes.json();
+
+/* ORDENAR RANGOS */
+const sorted = Object.entries(dist)
+.sort((a,b)=>parseInt(a[0]) - parseInt(b[0]));
+
+const labels = sorted.map(s=>s[0]);
+const valores = sorted.map(s=>s[1].total);
+
+new Chart(document.getElementById("distribucionChart"), {
+
+    type:"bar",
+
+    data:{
+        labels:labels,
+        datasets:[{
+            label:"Número de ayuntamientos",
+            data:valores,
+            backgroundColor:"#1193d4",
+            borderRadius:6
+        }]
+    },
+
+    options:{
+        scales:{
+            y:{
+                beginAtZero:true,
+                ticks:{ precision:0 }
+            }
+        },
+
+        plugins:{
+            legend:{display:false},
+
+            /******** TOOLTIP CON MUNICIPIOS ********/
+            tooltip:{
+                callbacks:{
+                    label:function(context){
+
+                        const rango = sorted[context.dataIndex][1];
+
+                        return [
+                            `Municipios: ${rango.total}`,
+                            "",
+                            ...rango.municipios
+                        ];
+                    }
+                }
+            }
+        }
+    }
+});
+
+
+
+
+
+/*************** RANKING ***************/
+const rankRes = await fetch("/api/ranking");
+const ranking = await rankRes.json();
+
+const areasCount = 7;
+
+new Chart(document.getElementById("rankingChart"), {
+
+    type: "bar",
+
+    data: {
+        labels: ranking.map(r => r.nombre),
+
+        datasets: [
+
+            {
+                label: "Comunicaciones",
+                data: ranking.map(r => r.comunicaciones / areasCount),
+                backgroundColor: "#2563eb"
+            },
+
+            {
+                label: "Backoffice",
+                data: ranking.map(r => r.backoffice / areasCount),
+                backgroundColor: "#7c3aed"
+            },
+
+            {
+                label: "Puestos de trabajo",
+                data: ranking.map(r => r.puestos / areasCount),
+                backgroundColor: "#06b6d4"
+            },
+
+            {
+                label: "Frontoffice",
+                data: ranking.map(r => r.frontoffice / areasCount),
+                backgroundColor: "#10b981"
+            },
+
+            {
+                label: "Smart City",
+                data: ranking.map(r => r.smart / areasCount),
+                backgroundColor: "#f59e0b"
+            },
+
+            {
+                label: "DTI",
+                data: ranking.map(r => r.dti / areasCount),
+                backgroundColor: "#ef4444"
+            },
+
+            {
+                label: "Planes",
+                data: ranking.map(r => r.planes / areasCount),
+                backgroundColor: "#64748b"
+            }
+
+        ]
+    },
+
+    options: {
+
+        indexAxis: "y",
+
+        scales: {
+            x: {
+                stacked: true,
+                max: 100
+            },
+            y: {
+                stacked: true
+            }
+        },
+
+        plugins: {
+            legend: {
+                position: "bottom"
+            }
+        }
+    }
+
+});
+
+
+/*************** AREAS ***************/
+const areasRes = await fetch("/api/media-areas");
+const areas = await areasRes.json();
+
+const nombresBonitos = {
+    comunicaciones: "Infraestructura de comunicaciones",
+    backoffice: "Digitalización interna",
+    puestos_trabajo: "Puestos de trabajo digitales",
+    frontoffice: "Servicios digitales al ciudadano",
+    smart_city: "Soluciones Smart City",
+    dti: "Destino Turístico Inteligente (DTI)",
+    planes: "Planificación estratégica"
 };
 
-const labels = Object.keys(zonas);
-const valores = Object.values(zonas).map(z => z.length);
-const total = valores.reduce((a, b) => a + b, 0);
-
-const ctx = document.getElementById('zonasChart');
-
-new Chart(ctx, {
-  type: 'doughnut',
-  data: {
-    labels: labels,
-    datasets: [{
-      data: valores,
-      backgroundColor: [
-        "#1193d4",
-        "#34d399",
-        "#fbbf24",
-        "#a78bfa",
-        "#fb7185",
-        "#38bdf8"
-      ],
-      borderWidth: 0
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "bottom"
-      },
-      datalabels: {
-        color: "#ffffff",
-        font: {
-          weight: "bold",
-          size: 13
+new Chart(document.getElementById("areasChart"), {
+    type:"radar",
+    data:{
+        labels:Object.keys(areas).map(a => nombresBonitos[a]),
+        datasets:[{
+            data:Object.values(areas),
+            backgroundColor:"rgba(17,147,212,0.2)",
+            borderColor:"#1193d4",
+            borderWidth:2,
+            pointBackgroundColor:"#1193d4"
+        }]
+    },
+    options:{
+      maintainAspectRatio: false,
+        scales:{
+            r:{
+                suggestedMin:0,
+                suggestedMax:100,
+                ticks:{
+                    backdropColor:"transparent"
+                }
+            }
         },
-        formatter: (value) => {
-          const porcentaje = (value / total * 100).toFixed(1);
-          return porcentaje + "%";
+        plugins:{
+            legend:{display:false}
         }
-      },
-      tooltip: {
-        callbacks: {
-          label: function(context) {
-            const zona = context.label;
-            const num = context.raw;
-            const porcentaje = ((num / total) * 100).toFixed(1);
-            return [
-              `${zona}: ${porcentaje}% (${num} ayuntamientos)`,
-              `Municipios: ${zonas[zona].join(", ")}`
-            ];
-          }
-        }
-      }
     }
-  },
-  plugins: [ChartDataLabels]
 });
+
+
+
+/*************** ZONAS ***************/
+/*************** ZONAS ***************/
+const zonas = await (await fetch("/api/digitalizacion-zonas")).json();
+
+new Chart(document.getElementById("zonasChart"),{
+type:"doughnut",
+data:{
+labels:zonas.map(z=>z.zona),
+datasets:[{
+data:zonas.map(z=>z.media),
+backgroundColor:[
+"#1193d4","#34d399","#fbbf24",
+"#a78bfa","#fb7185","#38bdf8"
+]
+}]
+},
+plugins:[ChartDataLabels],
+options:{
+plugins:{
+datalabels:{
+color:"#fff",
+formatter:(v)=>v.toFixed(1)+"%"
+},
+
+/******** 🔥 TOOLTIP CON MUNICIPIOS ********/
+tooltip:{
+callbacks:{
+label:function(context){
+
+const zona = zonas[context.dataIndex];
+
+return [
+`${zona.zona}: ${zona.media.toFixed(1)}%`,
+"",
+"Municipios:",
+...zona.ayuntamientos
+];
+
+}
+}
+}
+
+}
+}
+});
+
+
+}
+
+cargarTodo();
+
 </script>
 
-
-
-</body></html>
+</body>
+</html>

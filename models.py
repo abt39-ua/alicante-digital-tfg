@@ -18,8 +18,10 @@ class Ayuntamiento(db.Model):
     planes = db.Column(db.Float)
 
     # Nivel global
-    total = db.Column(db.Float)
+    nivel_digitalizacion  = db.Column(db.Float)
 
     # Acceso
     password_hash = db.Column(db.String(255), nullable=False)
 
+    latitud = db.Column(db.Float)
+    longitud = db.Column(db.Float)

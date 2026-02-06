@@ -1,12 +1,6 @@
 """
 Carga completa de ayuntamientos desde Sensitivity_Analysis.xlsx
-
-- Guarda todas las dimensiones de digitalización
-- Genera códigos y contraseñas
-- Pensado para regenerar la BD cuando se pierda (Render free)
-
-EJECUTAR:
-python scripts/cargar_ayuntamientos.py
+Versión ROBUSTA para TFG serio.
 """
 
 import sys
@@ -23,7 +17,9 @@ from app import app
 from models import db, Ayuntamiento
 
 
-EXCEL_FILE = "Sensitivity_Analysis.xlsx"
+# ✅ Ruta REAL al excel (nunca falla)
+EXCEL_FILE = os.path.join(BASE_DIR, "Sensitivity_Analysis.xlsx")
+
 
 COLUMN_MAP = {
     "AYUNTAMIENTO": "nombre",
@@ -34,7 +30,7 @@ COLUMN_MAP = {
     "smart city": "smart_city",
     "DTI": "dti",
     "planes": "planes",
-    "TOTAL": "total"
+    "TOTAL": "nivel_digitalizacion"
 }
 
 
@@ -47,22 +43,42 @@ def generar_password():
     return "".join(random.choices(chars, k=9))
 
 
+def safe_float(value):
+    """
+    Convierte a float evitando NaN.
+    """
+    if pd.isna(value):
+        return None
+    return float(value)
+
+
 def run():
+
     df = pd.read_excel(EXCEL_FILE)
 
-    print("📥 Cargando ayuntamientos desde Excel...\n")
+    # 🔥 Limpia columnas invisibles del Excel
+    df.columns = df.columns.str.strip()
+
+    print("\n📥 Cargando ayuntamientos desde Excel...\n")
 
     with app.app_context():
+
+        # ⚠️ BORRA TODO (esto está bien para seeds)
         db.session.query(Ayuntamiento).delete()
         db.session.commit()
 
         credenciales = []
 
         for idx, row in df.iterrows():
+
             data = {}
 
             for excel_col, model_col in COLUMN_MAP.items():
-                data[model_col] = float(row[excel_col]) if excel_col != "AYUNTAMIENTO" else str(row[excel_col]).strip()
+
+                if excel_col == "AYUNTAMIENTO":
+                    data[model_col] = str(row[excel_col]).strip()
+                else:
+                    data[model_col] = safe_float(row.get(excel_col))
 
             pwd = generar_password()
 
@@ -73,17 +89,23 @@ def run():
             )
 
             db.session.add(ayto)
-            credenciales.append((ayto.codigo, ayto.nombre, pwd))
+
+            credenciales.append({
+                "codigo": ayto.codigo,
+                "nombre": ayto.nombre,
+                "password": pwd
+            })
 
         db.session.commit()
 
     print("✅ Importación completada\n")
+
     print("🔑 CREDENCIALES GENERADAS:\n")
 
-    for c, n, p in credenciales:
-        print(f"{c} | {n} | {p}")
+    for c in credenciales:
+        print(f"{c['codigo']} | {c['nombre']} | {c['password']}")
 
-    print("\n💾 Guarda estas contraseñas en un lugar seguro.\n")
+    print("\n💾 Guarda estas contraseñas.\n")
 
 
 if __name__ == "__main__":
