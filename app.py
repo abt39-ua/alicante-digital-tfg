@@ -108,3 +108,93 @@ def digitalizacion_por_zonas():
         })
 
     return jsonify(resultado)
+
+
+@app.route("/api/media-digitalizacion")
+def media_digitalizacion():
+
+    aytos = Ayuntamiento.query.all()
+
+    valores = [a.nivel_digitalizacion for a in aytos if a.nivel_digitalizacion]
+
+    media = sum(valores) / len(valores)
+
+    max_ayto = max(aytos, key=lambda x: x.nivel_digitalizacion)
+    min_ayto = min(aytos, key=lambda x: x.nivel_digitalizacion)
+
+    return {
+        "media": round(media, 2),
+        "max": {
+            "nombre": max_ayto.nombre,
+            "valor": max_ayto.nivel_digitalizacion
+        },
+        "min": {
+            "nombre": min_ayto.nombre,
+            "valor": min_ayto.nivel_digitalizacion
+        }
+    }
+
+
+@app.route("/api/ranking")
+def ranking():
+
+    aytos = Ayuntamiento.query.order_by(
+        Ayuntamiento.nivel_digitalizacion.desc()
+    ).limit(10)
+
+    return [{
+        "nombre": a.nombre,
+        "valor": a.nivel_digitalizacion
+    } for a in aytos]
+
+
+@app.route("/api/media-areas")
+def media_areas():
+
+    aytos = Ayuntamiento.query.all()
+
+    campos = [
+        "comunicaciones",
+        "backoffice",
+        "puestos_trabajo",
+        "frontoffice",
+        "smart_city",
+        "dti",
+        "planes"
+    ]
+
+    resultado = {}
+
+    for campo in campos:
+        valores = [getattr(a, campo) for a in aytos if getattr(a, campo) is not None]
+        resultado[campo] = round(sum(valores) / len(valores), 2)
+
+    return resultado
+
+
+@app.route("/api/distribucion")
+def distribucion():
+
+    aytos = Ayuntamiento.query.all()
+
+    buckets = {
+        "Bajo": 0,
+        "Medio-bajo": 0,
+        "Medio": 0,
+        "Alto": 0
+    }
+
+    for a in aytos:
+
+        v = a.nivel_digitalizacion
+
+        if v < 25:
+            buckets["Bajo"] += 1
+        elif v < 50:
+            buckets["Medio-bajo"] += 1
+        elif v < 75:
+            buckets["Medio"] += 1
+        else:
+            buckets["Alto"] += 1
+
+    return buckets

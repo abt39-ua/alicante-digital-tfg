@@ -6,8 +6,12 @@
 <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Chart.js (NECESARIO para el gráfico circular) -->
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<!-- Plugin para mostrar porcentajes -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
 
 <script>
   tailwind.config = {
@@ -204,26 +208,39 @@
 
 <script>
 const zonas = {
-  "L'Alacantí": [
+  "L’Alacantí": [
     "Alicante", "San Vicente del Raspeig", "San Juan", "Mutxamel",
-    "El Campello", "Agost", "Busot"
-  ],
-  "Vega Baja": [
-    "Orihuela", "Torrevieja", "Pilar de la Horadada", "Guardamar",
-    "Almoradí", "Callosa de Segura", "Rojales", "Benejúzar",
-    "Dolores", "San Fulgencio", "Catral", "Bigastro"
-  ],
-  "Marina Alta": [
-    "Dénia", "Xàbia", "Calp", "Teulada", "Benissa",
-    "Gata de Gorgos", "Pedreguer", "Ondara", "El Verger"
-  ],
-  "Marina Baixa": [
-    "Benidorm", "Altea", "La Nucía", "Polop",
-    "Callosa d'en Sarrià", "Finestrat", "L'Alfàs del Pi"
+    "El Campello", "Aigües", "Busot"
   ],
   "Vinalopó": [
-    "Elche", "Elda", "Petrer", "Novelda", "Aspe",
-    "Monóvar", "Villena", "Sax", "Biar", "Pinoso"
+    "Elche", "Elda", "Petrer", "Novelda", "Monóvar", "Aspe",
+    "Sax", "Villena", "Pinoso", "Hondón de las Nieves",
+    "Hondón de los Frailes", "Salinas"
+  ],
+  "Vega Baja": [
+    "Orihuela", "Torrevieja", "Guardamar", "Pilar de la Horadada",
+    "Rojales", "Almoradí", "Callosa de Segura", "Dolores",
+    "Cox", "Catral", "Redován", "Bigastro", "San Fulgencio",
+    "Formentera del Segura", "Daya Vieja", "Daya Nueva",
+    "Algorfa", "Benejúzar", "Benferri", "Rafal"
+  ],
+  "Marina Alta": [
+    "Dénia", "Jávea", "Calpe", "Teulada", "Benissa", "Pego",
+    "Gata de Gorgos", "Ondara", "Pedreguer", "El Verger",
+    "Els Poblets", "Beniarbeig", "Orba", "Alcalalí",
+    "Parcent", "Benigembla", "Murla", "Sanet y Negrals"
+  ],
+  "Marina Baixa": [
+    "Benidorm", "Altea", "La Nucía", "Alfaz del Pi", "Polop",
+    "Callosa d’en Sarrià", "Finestrat", "Bolulla", "Tàrbena",
+    "Castell de Guadalest", "Beniardà", "Benifato",
+    "Confrides", "Relleu", "Sella", "Orxeta"
+  ],
+  "Interior / Alcoià – Comtat": [
+    "Alcoy", "Ibi", "Cocentaina", "Muro", "Banyeres",
+    "Castalla", "Onil", "Agres", "Biar", "Beneixama",
+    "Planes", "L’Orxa", "Quatretondeta", "Benilloba",
+    "Benimarfull", "Benifallim", "Tollos"
   ]
 };
 
@@ -244,7 +261,8 @@ new Chart(ctx, {
         "#34d399",
         "#fbbf24",
         "#a78bfa",
-        "#fb7185"
+        "#fb7185",
+        "#38bdf8"
       ],
       borderWidth: 0
     }]
@@ -255,13 +273,23 @@ new Chart(ctx, {
       legend: {
         position: "bottom"
       },
+      datalabels: {
+        color: "#ffffff",
+        font: {
+          weight: "bold",
+          size: 13
+        },
+        formatter: (value) => {
+          const porcentaje = (value / total * 100).toFixed(1);
+          return porcentaje + "%";
+        }
+      },
       tooltip: {
         callbacks: {
           label: function(context) {
             const zona = context.label;
             const num = context.raw;
             const porcentaje = ((num / total) * 100).toFixed(1);
-
             return [
               `${zona}: ${porcentaje}% (${num} ayuntamientos)`,
               `Municipios: ${zonas[zona].join(", ")}`
@@ -270,9 +298,11 @@ new Chart(ctx, {
         }
       }
     }
-  }
+  },
+  plugins: [ChartDataLabels]
 });
 </script>
+
 
 
 </body></html>
