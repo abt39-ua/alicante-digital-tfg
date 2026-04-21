@@ -118,14 +118,13 @@ Municipio líder: <span id="lider"></span>
 </div>
 <label class="relative">
 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary">search</span>
-<form onsubmit="buscarMunicipio(event)">
-  <input 
-    id="buscador"
-    class="form-input w-full ..."
-    placeholder="Busca un municipio (ej: Elche)"
-    type="search"
-  />
-</form>
+<input 
+  id="buscador"
+  class="form-input w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-gray-800 dark:text-gray-200 bg-background-light dark:bg-background-dark border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary h-14 placeholder:text-gray-500 dark:placeholder:text-gray-400 pl-12 pr-4 text-base shadow-sm"
+  placeholder="Busca un municipio (ej: Alicante, Elche, Benidorm)"
+  type="search"
+  onkeydown="if(event.key==='Enter') buscarMunicipio()"
+/>
 </label>
 </div>
 
@@ -502,6 +501,27 @@ function buscarMunicipio(e){
         window.location.href = "/municipio/" + nombre;
     }
 }
+</script>
+
+<script>
+
+async function buscarMunicipio(){
+
+    const input = document.getElementById("buscador").value.trim();
+
+    if(!input) return;
+
+    const res = await fetch("/api/buscar?q=" + input);
+    const resultados = await res.json();
+
+    if(resultados.length > 0){
+        // te lleva al mejor match
+        window.location.href = "/municipio/" + resultados[0];
+    } else {
+        alert("Municipio no encontrado");
+    }
+}
+
 </script>
 
 </body>

@@ -312,7 +312,9 @@ def municipios():
         "lon": a.longitud
     } for a in aytos if a.latitud and a.longitud])
 
-
+#######################################
+##         DETAILS
+#####################################
 @app.route("/municipio/<nombre>")
 def detalle_municipio(nombre):
 
@@ -345,6 +347,57 @@ def api_municipio(nombre):
         }
     })
 
+@app.route("/api/comparativa/<nombre>")
+def comparativa(nombre):
+
+    ayto = Ayuntamiento.query.filter_by(nombre=nombre).first()
+
+    if not ayto:
+        return jsonify({"error": "No encontrado"}), 404
+
+    # TOP 2 mejores
+    top = Ayuntamiento.query.order_by(
+        Ayuntamiento.nivel_digitalizacion.desc()
+    ).limit(2).all()
+
+    # TOP 2 peores
+    bottom = Ayuntamiento.query.order_by(
+        Ayuntamiento.nivel_digitalizacion.asc()
+    ).limit(2).all()
+
+    def extraer(a):
+        return {
+            "nombre": a.nombre,
+            "comunicaciones": a.comunicaciones or 0,
+            "backoffice": a.backoffice or 0,
+            "puestos": a.puestos_trabajo or 0,
+            "frontoffice": a.frontoffice or 0,
+            "smart": a.smart_city or 0,
+            "dti": a.dti or 0,
+            "planes": a.planes or 0
+        }
+
+    return jsonify({
+        "actual": extraer(ayto),
+        "top": [extraer(a) for a in top],
+        "bottom": [extraer(a) for a in bottom]
+    })
+
+from sqlalchemy import func
+
+@app.route("/api/buscar")
+def buscar():
+
+    q = request.args.get("q", "").lower()
+
+    if not q:
+        return jsonify([])
+
+    resultados = Ayuntamiento.query.filter(
+        func.lower(Ayuntamiento.nombre).contains(q)
+    ).limit(5).all()
+
+    return jsonify([a.nombre for a in resultados])
 
 ############################################
 # CREAR TABLAS

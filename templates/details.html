@@ -42,6 +42,7 @@
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23617c89' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
         }
     </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display">
 <div class="flex h-full min-h-screen w-full">
@@ -110,7 +111,8 @@
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 <div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
-<h3 class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mb-4">Digitalization Score Distribution</h3>
+<h3 class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mb-4">Comparativa de digitalización</h3>
+<canvas id="comparativaChart"></canvas>
 <div class="grid grid-flow-col gap-4 items-end justify-items-center h-48">
 <div class="w-full bg-primary/20 rounded-t-md" style="height: 10%;"></div>
 <div class="w-full bg-primary/20 rounded-t-md" style="height: 30%;"></div>
@@ -195,5 +197,84 @@
 </div>
 </main>
 </div>
+<script>
 
+async function cargarComparativa(){
+
+    const nombre = "{{ ayto.nombre }}";
+
+    const res = await fetch("/api/comparativa/" + nombre);
+    const data = await res.json();
+
+    const campos = [
+        "comunicaciones",
+        "backoffice",
+        "puestos",
+        "frontoffice",
+        "smart",
+        "dti",
+        "planes"
+    ];
+
+    function getData(obj){
+        return campos.map(c => obj[c] || 0);
+    }
+
+    const datasets = [];
+
+    // AYUNTAMIENTO ACTUAL
+    datasets.push({
+        label: data.actual.nombre,
+        data: getData(data.actual),
+        borderWidth: 3
+    });
+
+    // TOP 2
+    data.top.forEach(t => {
+        datasets.push({
+            label: "Top: " + t.nombre,
+            data: getData(t),
+            borderDash: [5,5]
+        });
+    });
+
+    // BOTTOM 2
+    data.bottom.forEach(b => {
+        datasets.push({
+            label: "Bottom: " + b.nombre,
+            data: getData(b),
+            borderDash: [2,2]
+        });
+    });
+
+    new Chart(document.getElementById("comparativaChart"), {
+
+        type: "radar",
+
+        data: {
+            labels: campos,
+            datasets: datasets
+        },
+
+        options: {
+            scales: {
+                r: {
+                    suggestedMin: 0,
+                    suggestedMax: 100
+                }
+            },
+            plugins: {
+                legend: {
+                    position: "bottom"
+                }
+            }
+        }
+
+    });
+
+}
+
+cargarComparativa();
+
+</script>
 </body></html>
