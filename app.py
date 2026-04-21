@@ -313,12 +313,45 @@ def municipios():
     } for a in aytos if a.latitud and a.longitud])
 
 
+@app.route("/municipio/<nombre>")
+def detalle_municipio(nombre):
+
+    ayto = Ayuntamiento.query.filter_by(nombre=nombre).first()
+
+    if not ayto:
+        return "Municipio no encontrado", 404
+
+    return render_template("details.html", ayto=ayto)
+
+@app.route("/api/municipio/<nombre>")
+def api_municipio(nombre):
+
+    a = Ayuntamiento.query.filter_by(nombre=nombre).first()
+
+    if not a:
+        return jsonify({"error": "No encontrado"}), 404
+
+    return jsonify({
+        "nombre": a.nombre,
+        "nivel": a.nivel_digitalizacion,
+        "areas": {
+            "comunicaciones": a.comunicaciones,
+            "backoffice": a.backoffice,
+            "puestos": a.puestos_trabajo,
+            "frontoffice": a.frontoffice,
+            "smart": a.smart_city,
+            "dti": a.dti,
+            "planes": a.planes
+        }
+    })
+
+
 ############################################
 # CREAR TABLAS
 ############################################
 
-with app.app_context():
-    db.create_all()
+##with app.app_context():
+  ##  db.create_all()
 
 
 ############################################

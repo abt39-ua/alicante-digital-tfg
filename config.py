@@ -10,7 +10,6 @@ class Config:
 
     if DATABASE_URL:
 
-        # 🔥 FIX obligatorio para Render
         if DATABASE_URL.startswith("postgres://"):
             DATABASE_URL = DATABASE_URL.replace(
                 "postgres://",

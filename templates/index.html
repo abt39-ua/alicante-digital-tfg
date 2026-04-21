@@ -118,7 +118,14 @@ Municipio líder: <span id="lider"></span>
 </div>
 <label class="relative">
 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary">search</span>
-<input class="form-input w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-gray-800 dark:text-gray-200 bg-background-light dark:bg-background-dark border-gray-300 dark:border-gray-700 focus:border-primary focus:ring-primary h-14 placeholder:text-gray-500 dark:placeholder:text-gray-400 pl-12 pr-4 text-base shadow-sm" placeholder="Ask our AI: e.g., 'Compare digitalization in Elche and Benidorm'" type="search"/>
+<form onsubmit="buscarMunicipio(event)">
+  <input 
+    id="buscador"
+    class="form-input w-full ..."
+    placeholder="Busca un municipio (ej: Elche)"
+    type="search"
+  />
+</form>
 </label>
 </div>
 
@@ -483,6 +490,18 @@ return [
 
 cargarTodo();
 
+</script>
+
+<script>
+function buscarMunicipio(e){
+    e.preventDefault();
+
+    const nombre = document.getElementById("buscador").value;
+
+    if(nombre){
+        window.location.href = "/municipio/" + nombre;
+    }
+}
 </script>
 
 </body>
