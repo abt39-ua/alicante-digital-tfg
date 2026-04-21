@@ -399,6 +399,37 @@ def buscar():
 
     return jsonify([a.nombre for a in resultados])
 
+#################################
+##          MAPA
+################################
+@app.route("/admin/cargar-coords")
+def cargar_coords():
+
+    coords = {
+        "Alicante": (38.3452, -0.481),
+        "Elche": (38.2699, -0.712),
+        "Benidorm": (38.541, -0.122),
+        "Alcoy": (38.698, -0.473),
+        "Torrevieja": (37.978, -0.683),
+        "Orihuela": (38.085, -0.944),
+        "Elda": (38.478, -0.791),
+        "Villena": (38.636, -0.865),
+        "Calpe": (38.644, 0.045),
+        "Dénia": (38.840, 0.105)
+    }
+
+    aytos = Ayuntamiento.query.all()
+
+    for a in aytos:
+        for nombre, (lat, lon) in coords.items():
+            if nombre.lower() in a.nombre.lower():
+                a.latitud = lat
+                a.longitud = lon
+
+    db.session.commit()
+
+    return "Coordenadas cargadas correctamente"
+
 ############################################
 # CREAR TABLAS
 ############################################

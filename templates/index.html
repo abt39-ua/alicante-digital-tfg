@@ -228,25 +228,38 @@ media.max.nombre + " (" + media.max.valor + "%)";
 
 
 
-/*************** MAPA ***************/
+/*************** MAPA REAL ***************/
 const map = L.map('map').setView([38.3452,-0.481],9);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
 maxZoom:19
 }).addTo(map);
 
-// Ejemplo marcadores (puedes ampliarlos luego)
-const ciudades = [
-["Alicante",38.3452,-0.481],
-["Elche",38.2699,-0.712],
-["Benidorm",38.541,-0.122],
-["Alcoy",38.698,-0.473]
-];
+const resMunicipios = await fetch("/api/municipios");
+const municipios = await resMunicipios.json();
 
-ciudades.forEach(c=>{
-L.marker([c[1],c[2]])
-.addTo(map)
-.bindPopup(c[0]);
+function getColor(nivel){
+    if(nivel < 50) return "red";
+    if(nivel < 70) return "orange";
+    return "green";
+}
+
+municipios.forEach(m => {
+
+    const marcador = L.circleMarker([m.lat, m.lon], {
+        radius: 8,
+        color: getColor(m.nivel),
+        fillOpacity: 0.8
+    }).addTo(map);
+
+    marcador.bindTooltip(
+        `<b>${m.nombre}</b><br>${m.nivel}% digitalización`,
+        {
+            direction: "top",
+            offset: [0, -10]
+        }
+    );
+
 });
 
 
@@ -277,16 +290,25 @@ new Chart(document.getElementById("distribucionChart"), {
 
     options:{
         scales:{
+            x:{
+                title:{
+                    display:true,
+                    text:"% de madurez digital"
+                }
+            },
             y:{
                 beginAtZero:true,
-                ticks:{ precision:0 }
+                ticks:{ precision:0 },
+                title:{
+                    display:true,
+                    text:"Número de ayuntamientos"
+                }
             }
         },
 
         plugins:{
             legend:{display:false},
 
-            /******** TOOLTIP CON MUNICIPIOS ********/
             tooltip:{
                 callbacks:{
                     label:function(context){
