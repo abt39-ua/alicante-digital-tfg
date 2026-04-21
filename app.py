@@ -420,15 +420,18 @@ def cargar_coords():
 
     aytos = Ayuntamiento.query.all()
 
+    actualizados = 0  # contador
+
     for a in aytos:
         for nombre, (lat, lon) in coords.items():
             if nombre.lower() in a.nombre.lower():
                 a.latitud = lat
                 a.longitud = lon
+                actualizados += 1
 
     db.session.commit()
 
-    return "Coordenadas cargadas correctamente"
+    return f"Actualizados: {actualizados}"
 
 ############################################
 # CREAR TABLAS
