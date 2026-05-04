@@ -73,16 +73,27 @@
 </nav>
 </div>
 <div class="flex items-center gap-4">
-<div class="hidden md:block">
-<label class="relative">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">search</span>
-<input id="buscadorHeader"
-  class="form-input w-full rounded-full px-4 py-2"
-  placeholder="Search"
-  type="search"
-  onkeydown="if(event.key==='Enter') buscarMunicipioHeader()"
-/>
-</label>
+<div class="hidden md:flex items-center gap-2">
+
+  <label class="relative">
+    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
+      search
+    </span>
+
+    <input id="buscadorHeader"
+      class="form-input w-full rounded-full pl-10 pr-4 py-2"
+      placeholder="Search"
+      type="search"
+      onkeydown="if(event.key==='Enter') buscarMunicipioHeader()"
+    />
+  </label>
+
+  <!-- AQUÍ VA EL BOTÓN -->
+  <button onclick="buscarMunicipioHeader()"
+    class="px-4 py-2 bg-primary text-white rounded-full hover:bg-primary/90 transition">
+    Buscar
+  </button>
+
 </div>
 <a href="/login">
   <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 cursor-pointer hover:opacity-80 transition"
@@ -108,15 +119,6 @@
 <div class="space-y-4">
 
 <label class="flex flex-col gap-2">
-<span class="text-sm font-medium">Buscar municipio</span>
-<input id="buscador"
-       class="form-input w-full"
-       placeholder="Ej: Alicante"
-       onkeydown="if(event.key==='Enter') buscarMunicipio()"
-/>
-</label>
-
-<label class="flex flex-col gap-2">
 <span class="text-sm font-medium">Seleccionar municipio</span>
 <select id="municipioSelect" class="form-select w-full">
 <option value="">Seleccionar...</option>
@@ -137,7 +139,7 @@
 </aside>
 <main class="flex-1 p-8">
 <div class="max-w-7xl mx-auto space-y-8">
-<h1 class="text-4xl font-bold text-text-primary-light dark:text-text-primary-dark">Digitalization Analytics</h1>
+<h1 class="text-4xl font-bold text-text-primary-light dark:text-text-primary-dark">Analítica de Digitalización</h1>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
   <!-- TOTAL MUNICIPIOS -->
@@ -154,7 +156,7 @@
   <!-- MEDIA -->
   <div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
     <p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">
-      Average Digitalization Score
+      Nivel de digitalización
     </p>
     <p id="mediaScore"
        class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark mt-2">
@@ -162,16 +164,6 @@
     </p>
   </div>
 
-  <!-- TOP MUNICIPIO -->
-  <div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
-    <p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">
-      Top Performing Municipality
-    </p>
-    <p id="topMunicipio"
-       class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark mt-2">
-       --
-    </p>
-  </div>
 
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -262,23 +254,6 @@
         }
     }
     </script>
-    <script>
-    async function buscarMunicipio(){
-
-        const input = document.getElementById("buscador").value.trim();
-
-        if(!input) return;
-
-        const res = await fetch("/api/buscar?q=" + input);
-        const resultados = await res.json();
-
-        if(resultados.length > 0){
-            window.location.href = "/municipio/" + resultados[0];
-        } else {
-            alert("Municipio no encontrado");
-        }
-    }
-    </script>
 
     <script>
     async function cargarAreaChart(){
@@ -356,7 +331,6 @@
 
         const municipio = getMunicipioDesdeURL();
 
-        // si estás en detalle → usar datos del municipio
         if(municipio){
 
             const res = await fetch("/api/municipio/" + municipio);
@@ -368,16 +342,11 @@
             document.getElementById("topMunicipio").innerText =
                 data.nombre;
 
-        } 
-        else {
-            // global
-            const res = await fetch("/api/media-digitalizacion");
-            const data = await res.json();
+        } else {
 
-            document.getElementById("mediaScore").innerText = data.media + "%";
-
-            document.getElementById("topMunicipio").innerText =
-                data.max.nombre + " (" + data.max.valor + "%)";
+            // SOLO TOTAL (no media absurda)
+            document.getElementById("mediaScore").innerText = "--";
+            document.getElementById("topMunicipio").innerText = "--";
         }
     }
 
@@ -559,18 +528,26 @@ function renderMedia(data){
     chart = new Chart(document.getElementById("comparativaChart"), {
         type: "bar",
         data: {
-            labels: Object.keys(data),
+            labels: [
+                "Comunicaciones",
+                "Backoffice",
+                "Puestos",
+                "Frontoffice",
+                "Smart",
+                "DTI",
+                "Planes"
+            ],
             datasets: [{
-                label: "Media",
+                label: "Nivel",
                 data: [
                     data.comunicaciones,
                     data.backoffice,
-                    data.puestos_trabajo || data.puestos,
+                    data.puestos,
                     data.frontoffice,
                     data.smart,
                     data.dti,
                     data.planes
-                ],
+                ]
             }]
         }
     });
