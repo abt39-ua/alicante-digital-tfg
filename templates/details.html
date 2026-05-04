@@ -86,7 +86,13 @@
 <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
 </svg>
 </div>
-<input class="form-input w-full rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark pl-10 pr-4 py-2.5 text-text-primary-light dark:text-text-primary-dark placeholder-text-secondary-light dark:placeholder-text-secondary-dark focus:ring-primary focus:border-primary" placeholder="Search" type="search"/>
+<input 
+  id="buscadorHeader"
+  class="form-input w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 border-transparent focus:border-primary focus:ring-primary h-10 placeholder:text-gray-400 dark:placeholder:text-gray-500 pl-10 pr-4 text-sm"
+  placeholder="Busca un municipio..."
+  type="search"
+  onkeydown="if(event.key==='Enter') buscarMunicipioHeader()"
+/>
 </div>
 <div class="space-y-4">
 <label class="flex flex-col gap-2">
@@ -128,18 +134,40 @@
 <div class="max-w-7xl mx-auto space-y-8">
 <h1 class="text-4xl font-bold text-text-primary-light dark:text-text-primary-dark">Digitalization Analytics</h1>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
-<p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">Total Municipalities</p>
-<p class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark mt-2">141</p>
-</div>
-<div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
-<p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">Average Digitalization Score</p>
-<p class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark mt-2">78.5</p>
-</div>
-<div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
-<p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">Top Performing Municipality</p>
-<p class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark mt-2">City of Valencia</p>
-</div>
+
+  <!-- TOTAL MUNICIPIOS -->
+  <div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
+    <p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">
+      Total de municipios
+    </p>
+    <p id="totalMunicipios"
+       class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark mt-2">
+       --
+    </p>
+  </div>
+
+  <!-- NIVEL DEL MUNICIPIO -->
+  <div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
+    <p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">
+      Nivel de digitalización
+    </p>
+    <p id="nivelMunicipio"
+       class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark mt-2">
+       --
+    </p>
+  </div>
+
+  <!-- MUNICIPIO ACTUAL -->
+  <div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
+    <p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">
+      Municipio
+    </p>
+    <p id="nombreMunicipio"
+       class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark mt-2">
+       --
+    </p>
+  </div>
+
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 <div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
@@ -307,6 +335,82 @@ async function cargarComparativa(){
 }
 
 cargarComparativa();
+
+</script>
+<script>
+
+function getMunicipioDesdeURL(){
+    const path = window.location.pathname;
+
+    if(path.startsWith("/municipio/")){
+        return decodeURIComponent(path.split("/municipio/")[1]);
+    }
+
+    return null;
+}
+
+async function cargarResumenMunicipio(){
+
+    const municipio = getMunicipioDesdeURL();
+
+    // 🔹 SI ESTÁS EN DETALLE
+    if(municipio){
+
+        const res = await fetch("/api/municipio/" + municipio);
+        const data = await res.json();
+
+        // Total municipios → lo mantenemos global
+        const resTotal = await fetch("/api/municipios");
+        const lista = await resTotal.json();
+        document.getElementById("totalMunicipios").innerText = lista.length;
+
+        // 🔥 ESTE ES EL CAMBIO IMPORTANTE
+        document.getElementById("nivelMunicipio").innerText =
+            data.nivel + "%";
+
+        document.getElementById("nombreMunicipio").innerText =
+            data.nombre;
+
+    } 
+    // 🔹 SI ESTÁS EN INDEX (fallback)
+    else {
+
+        const res = await fetch("/api/media-digitalizacion");
+        const data = await res.json();
+
+        document.getElementById("nivelMunicipio").innerText =
+            data.media + "%";
+
+        document.getElementById("nombreMunicipio").innerText =
+            data.max.nombre;
+
+        const resTotal = await fetch("/api/municipios");
+        const lista = await resTotal.json();
+        document.getElementById("totalMunicipios").innerText = lista.length;
+    }
+
+}
+
+cargarResumenMunicipio();
+
+</script>
+<script>
+
+    async function buscarMunicipioHeader(){
+
+        const input = document.getElementById("buscadorHeader").value.trim();
+
+        if(!input) return;
+
+        const res = await fetch("/api/buscar?q=" + input);
+        const resultados = await res.json();
+
+        if(resultados.length > 0){
+            window.location.href = "/municipio/" + resultados[0];
+        } else {
+            alert("Municipio no encontrado");
+        }
+    }
 
 </script>
 </body></html>
