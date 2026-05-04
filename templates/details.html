@@ -167,9 +167,8 @@
     <p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">
       Total de municipios
     </p>
-    <p id="totalMunicipios"
-       class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark mt-2">
-       --
+    <p class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark mt-2">
+        79
     </p>
   </div>
 
@@ -393,7 +392,7 @@ async function cargarResumenMunicipio(){
 
         // 🔥 ESTE ES EL CAMBIO IMPORTANTE
         document.getElementById("nivelMunicipio").innerText =
-            data.nivel + "%";
+            data.nivel.toFixed(2) + "%";
 
         document.getElementById("nombreMunicipio").innerText =
             data.nombre;
