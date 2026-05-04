@@ -379,42 +379,37 @@ async function cargarResumenMunicipio(){
 
     const municipio = getMunicipioDesdeURL();
 
-    // 🔹 SI ESTÁS EN DETALLE
     if(municipio){
 
         const res = await fetch("/api/municipio/" + municipio);
         const data = await res.json();
 
-        // Total municipios → lo mantenemos global
-        const resTotal = await fetch("/api/municipios");
-        const lista = await resTotal.json();
-        document.getElementById("totalMunicipios").innerText = lista.length;
+        // 🔥 FIX SEGURO
+        const nivel = (data.nivel !== null && data.nivel !== undefined)
+            ? Number(data.nivel).toFixed(2)
+            : "--";
 
-        // 🔥 ESTE ES EL CAMBIO IMPORTANTE
         document.getElementById("nivelMunicipio").innerText =
-            data.nivel.toFixed(2) + "%";
+            nivel !== "--" ? nivel + "%" : "--";
 
         document.getElementById("nombreMunicipio").innerText =
-            data.nombre;
+            data.nombre || "--";
 
-    } 
-    // 🔹 SI ESTÁS EN INDEX (fallback)
-    else {
+    } else {
 
         const res = await fetch("/api/media-digitalizacion");
         const data = await res.json();
 
+        const nivel = (data.media !== null && data.media !== undefined)
+            ? Number(data.media).toFixed(2)
+            : "--";
+
         document.getElementById("nivelMunicipio").innerText =
-            data.media + "%";
+            nivel !== "--" ? nivel + "%" : "--";
 
         document.getElementById("nombreMunicipio").innerText =
-            data.max.nombre;
-
-        const resTotal = await fetch("/api/municipios");
-        const lista = await resTotal.json();
-        document.getElementById("totalMunicipios").innerText = lista.length;
+            data.max?.nombre || "--";
     }
-
 }
 
 cargarResumenMunicipio();
