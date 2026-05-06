@@ -5,6 +5,7 @@
 <title>Stitch Design</title>
 <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
 <link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Public+Sans:wght@400;500;700;900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script>
         tailwind.config = {
@@ -38,6 +39,10 @@
         }
     </script>
 <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
         .form-select {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23617c89' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
         }
@@ -87,7 +92,7 @@
               class="form-input w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 border-transparent focus:border-primary focus:ring-primary h-10 placeholder:text-gray-400 dark:placeholder:text-gray-500 pl-10 pr-4 text-sm"
               placeholder="Search"
               type="search"
-              onkeydown="if(event.key==='Enter') buscarMunicipioHeader()"
+              onkeydown="if(event.key==='Enter') buscarMunicipioDesdeInput(this)"
             />
           </label>
         </div>
@@ -114,11 +119,11 @@
 </svg>
 </div>
 <input 
-  id="buscadorHeader"
+  id="buscadorFiltro"
   class="form-input w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 border-transparent focus:border-primary focus:ring-primary h-10 placeholder:text-gray-400 dark:placeholder:text-gray-500 pl-10 pr-4 text-sm"
   placeholder="Busca un municipio..."
   type="search"
-  onkeydown="if(event.key==='Enter') buscarMunicipioHeader()"
+  onkeydown="if(event.key==='Enter') buscarMunicipioDesdeInput(this)"
 />
 </div>
 <div class="space-y-4">
@@ -134,14 +139,6 @@
 <span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Subcategory</span>
 <select class="form-select w-full rounded-lg border-border-light dark:border-border-dark bg-content-light dark:bg-content-dark text-text-primary-light dark:text-text-primary-dark focus:ring-primary focus:border-primary">
 <option>Select a subcategory</option>
-<option>Two</option>
-<option>Three</option>
-</select>
-</label>
-<label class="flex flex-col gap-2">
-<span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Municipality</span>
-<select class="form-select w-full rounded-lg border-border-light dark:border-border-dark bg-content-light dark:bg-content-dark text-text-primary-light dark:text-text-primary-dark focus:ring-primary focus:border-primary">
-<option>Select a municipality</option>
 <option>Two</option>
 <option>Three</option>
 </select>
@@ -198,20 +195,12 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 <div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
 <h3 class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mb-4">Comparativa de digitalización</h3>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-4">
+  Marca los ayuntamientos que quieres comparar y pasa el raton por el grafico para ver el detalle.
+</p>
+<div id="comparativaControles" class="flex flex-wrap gap-3 mb-5"></div>
+<div class="relative h-[360px] sm:h-[420px]">
 <canvas id="comparativaChart"></canvas>
-<div class="grid grid-flow-col gap-4 items-end justify-items-center h-48">
-<div class="w-full bg-primary/20 rounded-t-md" style="height: 10%;"></div>
-<div class="w-full bg-primary/20 rounded-t-md" style="height: 30%;"></div>
-<div class="w-full bg-primary rounded-t-md" style="height: 50%;"></div>
-<div class="w-full bg-primary/20 rounded-t-md" style="height: 20%;"></div>
-<div class="w-full bg-primary/20 rounded-t-md" style="height: 80%;"></div>
-</div>
-<div class="grid grid-flow-col gap-4 justify-items-center mt-2">
-<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">0-20</p>
-<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">21-40</p>
-<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">41-60</p>
-<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">61-80</p>
-<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">81-100</p>
 </div>
 </div>
 <div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
@@ -285,6 +274,8 @@
 </div>
 <script>
 
+let comparativaChartInstance = null;
+
 async function cargarComparativa(){
 
     const nombre = "{{ ayto.nombre }}";
@@ -306,34 +297,75 @@ async function cargarComparativa(){
         return campos.map(c => obj[c] || 0);
     }
 
-    const datasets = [];
+    const comparadores = [];
+    const comparadoresPorNombre = new Map();
 
-    // AYUNTAMIENTO ACTUAL
-    datasets.push({
-        label: data.actual.nombre,
-        data: getData(data.actual),
-        borderWidth: 3
+    function registrarComparador(obj, rol){
+        if(!obj?.nombre) return;
+
+        let comparador = comparadoresPorNombre.get(obj.nombre);
+
+        if(!comparador){
+            comparador = {
+                ...obj,
+                roles: []
+            };
+
+            comparadoresPorNombre.set(obj.nombre, comparador);
+            comparadores.push(comparador);
+        }
+
+        if(!comparador.roles.includes(rol)){
+            comparador.roles.push(rol);
+        }
+    }
+
+    registrarComparador(data.actual, "Actual");
+
+    data.top.forEach((t, index) => {
+        registrarComparador(t, "Top " + (index + 1));
     });
 
-    // TOP 2
-    data.top.forEach(t => {
-        datasets.push({
-            label: "Top: " + t.nombre,
-            data: getData(t),
-            borderDash: [5,5]
-        });
+    data.bottom.forEach((b, index) => {
+        registrarComparador(b, "Bottom " + (index + 1));
     });
 
-    // BOTTOM 2
-    data.bottom.forEach(b => {
-        datasets.push({
-            label: "Bottom: " + b.nombre,
-            data: getData(b),
-            borderDash: [2,2]
-        });
+    const palette = [
+        { border: "#1193d4", background: "rgba(17, 147, 212, 0.22)" },
+        { border: "#f97316", background: "rgba(249, 115, 22, 0.20)" },
+        { border: "#ef4444", background: "rgba(239, 68, 68, 0.18)" },
+        { border: "#10b981", background: "rgba(16, 185, 129, 0.18)" },
+        { border: "#f59e0b", background: "rgba(245, 158, 11, 0.18)" }
+    ];
+
+    const datasets = comparadores.map((comparador, index) => {
+        const colores = palette[index % palette.length];
+        const esActual = comparador.roles.includes("Actual");
+        const esBottom = !esActual && comparador.roles.some(rol => rol.startsWith("Bottom"));
+
+        return {
+            label: comparador.nombre,
+            data: getData(comparador),
+            borderColor: colores.border,
+            backgroundColor: colores.background,
+            pointBackgroundColor: colores.border,
+            pointBorderColor: "#ffffff",
+            pointHoverBackgroundColor: "#ffffff",
+            pointHoverBorderColor: colores.border,
+            pointRadius: esActual ? 4 : 3,
+            pointHoverRadius: 6,
+            borderWidth: esActual ? 4 : 3,
+            borderDash: esBottom ? [6, 4] : [],
+            fill: true,
+            customRoles: comparador.roles
+        };
     });
 
-    new Chart(document.getElementById("comparativaChart"), {
+    if(comparativaChartInstance){
+        comparativaChartInstance.destroy();
+    }
+
+    comparativaChartInstance = new Chart(document.getElementById("comparativaChart"), {
 
         type: "radar",
 
@@ -343,19 +375,114 @@ async function cargarComparativa(){
         },
 
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: "nearest",
+                intersect: false
+            },
+            elements: {
+                line: {
+                    tension: 0.15
+                }
+            },
             scales: {
                 r: {
-                    suggestedMin: 0,
-                    suggestedMax: 100
+                    min: 0,
+                    max: 100,
+                    ticks: {
+                        stepSize: 20,
+                        backdropColor: "transparent"
+                    },
+                    pointLabels: {
+                        font: {
+                            size: 13
+                        }
+                    },
+                    grid: {
+                        color: "rgba(148, 163, 184, 0.25)"
+                    },
+                    angleLines: {
+                        color: "rgba(148, 163, 184, 0.22)"
+                    }
                 }
             },
             plugins: {
+                tooltip: {
+                    callbacks: {
+                        label(context){
+                            return context.dataset.label + ": " + context.formattedValue + "%";
+                        },
+                        footer(items){
+                            if(!items.length) return "";
+                            const roles = items[0].dataset.customRoles || [];
+                            return roles.join(" / ");
+                        }
+                    }
+                },
                 legend: {
-                    position: "bottom"
+                    display: false
                 }
             }
         }
 
+    });
+
+    renderComparativaControles(comparadores, comparativaChartInstance);
+
+}
+
+function renderComparativaControles(comparadores, chart){
+
+    const container = document.getElementById("comparativaControles");
+
+    if(!container) return;
+
+    container.innerHTML = "";
+
+    comparadores.forEach((comparador, index) => {
+        const dataset = chart.data.datasets[index];
+        const label = document.createElement("label");
+        label.className = "flex items-center gap-3 rounded-full border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark px-4 py-2 cursor-pointer transition-opacity";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = chart.isDatasetVisible(index);
+        checkbox.className = "h-4 w-4 rounded border-border-light text-primary focus:ring-primary";
+
+        const colorDot = document.createElement("span");
+        colorDot.className = "h-3 w-3 rounded-full flex-shrink-0";
+        colorDot.style.backgroundColor = dataset.borderColor;
+
+        const textWrapper = document.createElement("span");
+        textWrapper.className = "flex flex-col";
+
+        const title = document.createElement("span");
+        title.className = "text-sm font-semibold text-text-primary-light dark:text-text-primary-dark leading-tight";
+        title.textContent = comparador.nombre;
+
+        const subtitle = document.createElement("span");
+        subtitle.className = "text-xs text-text-secondary-light dark:text-text-secondary-dark leading-tight";
+        subtitle.textContent = comparador.roles.join(" / ");
+
+        textWrapper.appendChild(title);
+        textWrapper.appendChild(subtitle);
+        label.appendChild(checkbox);
+        label.appendChild(colorDot);
+        label.appendChild(textWrapper);
+
+        function syncEstado(){
+            label.style.opacity = checkbox.checked ? "1" : "0.5";
+        }
+
+        checkbox.addEventListener("change", () => {
+            chart.setDatasetVisibility(index, checkbox.checked);
+            chart.update();
+            syncEstado();
+        });
+
+        syncEstado();
+        container.appendChild(label);
     });
 
 }
@@ -417,9 +544,9 @@ cargarResumenMunicipio();
 </script>
 <script>
 
-    async function buscarMunicipioHeader(){
+    async function buscarMunicipioDesdeInput(inputElement){
 
-        const input = document.getElementById("buscadorHeader").value.trim();
+        const input = inputElement.value.trim();
 
         if(!input) return;
 
