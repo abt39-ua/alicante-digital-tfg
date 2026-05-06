@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="es"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Alicante Digital</title>
@@ -67,16 +67,16 @@
 <h2 class="text-xl font-bold">Alicante Digital</h2>
 </div>
 <nav class="hidden md:flex items-center gap-6">
-<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">Home</a>
-<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">About</a>
-<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">Contact</a>
+<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">Inicio</a>
+<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">Acerca de</a>
+<a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">Contacto</a>
 </nav>
 </div>
 <div class="flex items-center gap-4">
 <div class="hidden md:block">
 <label class="relative">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">search</span>
-<input class="form-input w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 border-transparent focus:border-primary focus:ring-primary h-10 placeholder:text-gray-400 dark:placeholder:text-gray-500 pl-10 pr-4 text-sm" placeholder="Search" type="search"/>
+<input class="form-input w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 border-transparent focus:border-primary focus:ring-primary h-10 placeholder:text-gray-400 dark:placeholder:text-gray-500 pl-10 pr-4 text-sm" placeholder="Buscar" type="search"/>
 </label>
 </div>
 <a href="/login">
@@ -136,7 +136,7 @@ Municipio líder: <span id="lider"></span>
 <div class="bg-white rounded-xl p-6 shadow-md">
 
 <h3 class="text-lg font-semibold mb-4">
-Top 10 ayuntamientos
+10 ayuntamientos con mayor digitalizacion
 </h3>
 
 <canvas id="rankingChart"></canvas>
@@ -353,7 +353,7 @@ new Chart(document.getElementById("rankingChart"), {
             },
 
             {
-                label: "Backoffice",
+                label: "Digitalizacion interna",
                 data: ranking.map(r => r.backoffice / areasCount),
                 backgroundColor: "#7c3aed"
             },
@@ -365,13 +365,13 @@ new Chart(document.getElementById("rankingChart"), {
             },
 
             {
-                label: "Frontoffice",
+                label: "Servicios al ciudadano",
                 data: ranking.map(r => r.frontoffice / areasCount),
                 backgroundColor: "#10b981"
             },
 
             {
-                label: "Smart City",
+                label: "Ciudad inteligente",
                 data: ranking.map(r => r.smart / areasCount),
                 backgroundColor: "#f59e0b"
             },
@@ -424,7 +424,7 @@ const nombresBonitos = {
     backoffice: "Digitalización interna",
     puestos_trabajo: "Puestos de trabajo digitales",
     frontoffice: "Servicios digitales al ciudadano",
-    smart_city: "Soluciones Smart City",
+    smart_city: "Soluciones de ciudad inteligente",
     dti: "Destino Turístico Inteligente (DTI)",
     planes: "Planificación estratégica"
 };

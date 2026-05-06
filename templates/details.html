@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="es"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Stitch Design</title>
+<title>Alicante Digital</title>
 <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
 <link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Public+Sans:wght@400;500;700;900" onload="this.rel='stylesheet'" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
@@ -70,9 +70,9 @@
 
         <!-- NAV -->
         <nav class="hidden md:flex items-center gap-6">
-          <a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" href="/">Home</a>
-          <a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" href="#">About</a>
-          <a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" href="#">Contact</a>
+          <a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" href="/">Inicio</a>
+          <a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" href="#">Acerca de</a>
+          <a class="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" href="#">Contacto</a>
         </nav>
 
       </div>
@@ -90,7 +90,7 @@
             <input 
               id="buscadorHeader"
               class="form-input w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 border-transparent focus:border-primary focus:ring-primary h-10 placeholder:text-gray-400 dark:placeholder:text-gray-500 pl-10 pr-4 text-sm"
-              placeholder="Search"
+              placeholder="Buscar"
               type="search"
               onkeydown="if(event.key==='Enter') buscarMunicipioDesdeInput(this)"
             />
@@ -111,7 +111,7 @@
 </header>
 <div class="flex h-full min-h-screen w-full">
 <aside class="w-80 flex-shrink-0 bg-content-light dark:bg-content-dark border-r border-border-light dark:border-border-dark p-6 flex flex-col gap-6">
-<h2 class="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">Filters</h2>
+<h2 class="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">Filtros</h2>
 <div class="relative">
 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 <svg class="h-5 w-5 text-text-secondary-light dark:text-text-secondary-dark" fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -128,35 +128,35 @@
 </div>
 <div class="space-y-4">
 <label class="flex flex-col gap-2">
-<span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Category</span>
+<span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Categoria</span>
 <select class="form-select w-full rounded-lg border-border-light dark:border-border-dark bg-content-light dark:bg-content-dark text-text-primary-light dark:text-text-primary-dark focus:ring-primary focus:border-primary">
-<option>Select a category</option>
-<option>Two</option>
-<option>Three</option>
+<option>Selecciona una categoria</option>
+<option>Dos</option>
+<option>Tres</option>
 </select>
 </label>
 <label class="flex flex-col gap-2">
-<span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Subcategory</span>
+<span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Subcategoria</span>
 <select class="form-select w-full rounded-lg border-border-light dark:border-border-dark bg-content-light dark:bg-content-dark text-text-primary-light dark:text-text-primary-dark focus:ring-primary focus:border-primary">
-<option>Select a subcategory</option>
-<option>Two</option>
-<option>Three</option>
+<option>Selecciona una subcategoria</option>
+<option>Dos</option>
+<option>Tres</option>
 </select>
 </label>
 <label class="flex flex-col gap-2">
-<span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Period</span>
+<span class="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Periodo</span>
 <select class="form-select w-full rounded-lg border-border-light dark:border-border-dark bg-content-light dark:bg-content-dark text-text-primary-light dark:text-text-primary-dark focus:ring-primary focus:border-primary">
-<option>Select a period</option>
-<option>Two</option>
-<option>Three</option>
+<option>Selecciona un periodo</option>
+<option>Dos</option>
+<option>Tres</option>
 </select>
 </label>
 </div>
-<button class="w-full rounded-lg bg-primary py-2.5 px-4 text-sm font-bold text-white hover:bg-primary/90 transition-colors">Apply Filters</button>
+<button class="w-full rounded-lg bg-primary py-2.5 px-4 text-sm font-bold text-white hover:bg-primary/90 transition-colors">Aplicar filtros</button>
 </aside>
 <main class="flex-1 p-8">
 <div class="max-w-7xl mx-auto space-y-8">
-<h1 class="text-4xl font-bold text-text-primary-light dark:text-text-primary-dark">Digitalization Analytics</h1>
+<h1 class="text-4xl font-bold text-text-primary-light dark:text-text-primary-dark">Analitica de digitalizacion</h1>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
   <!-- TOTAL MUNICIPIOS -->
@@ -204,64 +204,39 @@
 </div>
 </div>
 <div class="bg-content-light dark:bg-content-dark rounded-lg p-6 border border-border-light dark:border-border-dark">
-<h3 class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mb-4">Digitalization Trends Over Time</h3>
-<div class="h-48">
-<svg fill="none" height="100%" preserveAspectRatio="none" viewBox="0 0 472 150" width="100%" xmlns="http://www.w3.org/2000/svg">
-<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V149H0V109Z" fill="url(#paint0_linear_1131_5935)"></path>
-<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#1193d4" stroke-linecap="round" stroke-width="3"></path>
-<defs>
-<linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear_1131_5935" x1="236" x2="236" y1="1" y2="149">
-<stop stop-color="#1193d4" stop-opacity="0.2"></stop>
-<stop offset="1" stop-color="#1193d4" stop-opacity="0"></stop>
-</linearGradient>
-</defs>
-</svg>
-</div>
-<div class="flex justify-around mt-2">
-<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">Jan</p>
-<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">Feb</p>
-<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">Mar</p>
-<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">Apr</p>
-<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">May</p>
-<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">Jun</p>
-<p class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">Jul</p>
-</div>
-</div>
-</div>
-<div>
-<h3 class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mb-4">Top Performing Municipalities</h3>
+<h3 class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mb-4">Top 5 municipios</h3>
 <div class="overflow-x-auto rounded-lg border border-border-light dark:border-border-dark bg-content-light dark:bg-content-dark">
 <table class="w-full text-left">
 <thead class="bg-background-light dark:bg-background-dark">
 <tr>
-<th class="px-6 py-3 text-sm font-semibold text-text-primary-light dark:text-text-primary-dark">Municipality</th>
-<th class="px-6 py-3 text-sm font-semibold text-text-primary-light dark:text-text-primary-dark">Digitalization Score</th>
-<th class="px-6 py-3 text-sm font-semibold text-text-primary-light dark:text-text-primary-dark">Ranking</th>
+<th class="px-6 py-3 text-sm font-semibold text-text-primary-light dark:text-text-primary-dark">Municipio</th>
+<th class="px-6 py-3 text-sm font-semibold text-text-primary-light dark:text-text-primary-dark">Nivel de digitalizacion</th>
+<th class="px-6 py-3 text-sm font-semibold text-text-primary-light dark:text-text-primary-dark">Puesto</th>
 </tr>
 </thead>
 <tbody class="divide-y divide-border-light dark:divide-border-dark">
 <tr>
-<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">City of Valencia</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Ciudad de Valencia</td>
 <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">95.2</td>
 <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">1</td>
 </tr>
 <tr>
-<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Town of Alicante</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Municipio de Alicante</td>
 <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">92.8</td>
 <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">2</td>
 </tr>
 <tr>
-<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Village of Elche</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Municipio de Elche</td>
 <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">90.5</td>
 <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">3</td>
 </tr>
 <tr>
-<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">City of Torrevieja</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Ciudad de Torrevieja</td>
 <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">88.7</td>
 <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">4</td>
 </tr>
 <tr>
-<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Town of Orihuela</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Municipio de Orihuela</td>
 <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">86.3</td>
 <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">5</td>
 </tr>
@@ -291,6 +266,16 @@ async function cargarComparativa(){
         "smart",
         "dti",
         "planes"
+    ];
+
+    const etiquetasCampos = [
+        "Comunicaciones",
+        "Digitalizacion interna",
+        "Puestos de trabajo",
+        "Servicios al ciudadano",
+        "Ciudad inteligente",
+        "DTI",
+        "Planes"
     ];
 
     function getData(obj){
@@ -323,11 +308,11 @@ async function cargarComparativa(){
     registrarComparador(data.actual, "Actual");
 
     data.top.forEach((t, index) => {
-        registrarComparador(t, "Top " + (index + 1));
+        registrarComparador(t, "Mayor " + (index + 1));
     });
 
     data.bottom.forEach((b, index) => {
-        registrarComparador(b, "Bottom " + (index + 1));
+        registrarComparador(b, "Menor " + (index + 1));
     });
 
     const palette = [
@@ -341,7 +326,7 @@ async function cargarComparativa(){
     const datasets = comparadores.map((comparador, index) => {
         const colores = palette[index % palette.length];
         const esActual = comparador.roles.includes("Actual");
-        const esBottom = !esActual && comparador.roles.some(rol => rol.startsWith("Bottom"));
+        const esBottom = !esActual && comparador.roles.some(rol => rol.startsWith("Menor"));
 
         return {
             label: comparador.nombre,
@@ -370,7 +355,7 @@ async function cargarComparativa(){
         type: "radar",
 
         data: {
-            labels: campos,
+            labels: etiquetasCampos,
             datasets: datasets
         },
 
