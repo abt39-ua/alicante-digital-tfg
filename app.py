@@ -360,6 +360,11 @@ def comparativa(nombre):
         Ayuntamiento.nivel_digitalizacion.desc()
     ).limit(2).all()
 
+    # TOP 5 ranking
+    top5 = Ayuntamiento.query.order_by(
+        Ayuntamiento.nivel_digitalizacion.desc()
+    ).limit(5).all()
+
     # TOP 2 peores
     bottom = Ayuntamiento.query.order_by(
         Ayuntamiento.nivel_digitalizacion.asc()
@@ -377,10 +382,17 @@ def comparativa(nombre):
             "planes": a.planes or 0
         }
 
+    def extraer_ranking(a):
+        return {
+            "nombre": a.nombre,
+            "nivel": round(a.nivel_digitalizacion or 0, 2)
+        }
+
     return jsonify({
         "actual": extraer(ayto),
         "top": [extraer(a) for a in top],
-        "bottom": [extraer(a) for a in bottom]
+        "bottom": [extraer(a) for a in bottom],
+        "top5": [extraer_ranking(a) for a in top5]
     })
 
 from sqlalchemy import func

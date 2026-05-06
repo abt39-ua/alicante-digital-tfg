@@ -214,31 +214,9 @@
 <th class="px-6 py-3 text-sm font-semibold text-text-primary-light dark:text-text-primary-dark">Puesto</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-border-light dark:divide-border-dark">
+<tbody id="top5TableBody" class="divide-y divide-border-light dark:divide-border-dark">
 <tr>
-<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Ciudad de Valencia</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">95.2</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">1</td>
-</tr>
-<tr>
-<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Municipio de Alicante</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">92.8</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">2</td>
-</tr>
-<tr>
-<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Municipio de Elche</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">90.5</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">3</td>
-</tr>
-<tr>
-<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Ciudad de Torrevieja</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">88.7</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">4</td>
-</tr>
-<tr>
-<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">Municipio de Orihuela</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">86.3</td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">5</td>
+<td class="px-6 py-4 text-sm text-text-secondary-light dark:text-text-secondary-dark" colspan="3">Cargando datos...</td>
 </tr>
 </tbody>
 </table>
@@ -414,6 +392,7 @@ async function cargarComparativa(){
     });
 
     renderComparativaControles(comparadores, comparativaChartInstance);
+    renderTop5Table(data.top5);
 
 }
 
@@ -470,6 +449,32 @@ function renderComparativaControles(comparadores, chart){
         container.appendChild(label);
     });
 
+}
+
+function renderTop5Table(top5){
+
+    const tbody = document.getElementById("top5TableBody");
+
+    if(!tbody) return;
+
+    if(!top5?.length){
+        tbody.innerHTML = `
+            <tr>
+                <td class="px-6 py-4 text-sm text-text-secondary-light dark:text-text-secondary-dark" colspan="3">
+                    No hay datos disponibles.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = top5.map((municipio, index) => `
+        <tr>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-primary-light dark:text-text-primary-dark">${municipio.nombre}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">${municipio.nivel}%</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary-light dark:text-text-secondary-dark">${index + 1}</td>
+        </tr>
+    `).join("");
 }
 
 cargarComparativa();
