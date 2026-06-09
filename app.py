@@ -111,19 +111,7 @@ def panel():
     ayto = Ayuntamiento.query.get(session["ayuntamiento_id"])
 
     if request.method == "POST":
-        campos = ["comunicaciones", "backoffice", "puestos_trabajo", "frontoffice", "smart_city", "dti", "planes"]
-        for campo in campos:
-            val = request.form.get(campo)
-            if val is not None:
-                try:
-                    setattr(ayto, campo, float(val))
-                except ValueError:
-                    pass
-        valores = [getattr(ayto, c) for c in campos if getattr(ayto, c) is not None]
-        if valores:
-            ayto.nivel_digitalizacion = round(sum(valores) / len(valores), 2)
-        db.session.commit()
-        flash("Datos actualizados correctamente", "success")
+        pass
 
     return render_template("dashboard.html", ayto=ayto)
 

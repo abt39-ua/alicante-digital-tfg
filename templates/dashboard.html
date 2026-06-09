@@ -111,42 +111,23 @@
 
   <!-- FORMULARIO ÚNICO -->
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-    <h2 class="text-xl font-bold text-gray-900 mb-1">Actualizar datos de digitalización</h2>
-    <p class="text-sm text-gray-400 mb-8">Ajusta los valores de cada área (0–100). El nivel total se recalcula automáticamente.</p>
+    <h2 class="text-xl font-bold text-gray-900 mb-1">Comentarios sobre digitalización</h2>
+    <p class="text-sm text-gray-400 mb-6">Describe los avances, proyectos o cambios en la digitalización de tu municipio.</p>
 
-    <form method="POST" class="space-y-6">
+    <form onsubmit="return false;">
+      <textarea
+        name="comentarios"
+        rows="8"
+        placeholder="Escribe aquí los cambios, avances o proyectos de digitalización del municipio..."
+        class="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none resize-none"
+      >{{ ayto.comentarios or "" }}</textarea>
 
-      {% set areas = [
-        ("comunicaciones",  "Infraestructura de comunicaciones",  ayto.comunicaciones),
-        ("backoffice",      "Digitalización interna",             ayto.backoffice),
-        ("puestos_trabajo", "Puestos de trabajo digitales",       ayto.puestos_trabajo),
-        ("frontoffice",     "Servicios digitales al ciudadano",   ayto.frontoffice),
-        ("smart_city",      "Ciudad inteligente",                 ayto.smart_city),
-        ("dti",             "Destino Turístico Inteligente (DTI)",ayto.dti),
-        ("planes",          "Planificación estratégica",          ayto.planes),
-      ] %}
-
-      {% for campo, etiqueta, valor in areas %}
-      <div>
-        <label for="{{ campo }}" class="block text-sm font-medium text-gray-700 mb-1">{{ etiqueta }}</label>
-        <input
-          type="number" min="0" max="100" step="0.1"
-          name="{{ campo }}"
-          id="{{ campo }}"
-          value="{{ valor | round(1) if valor else 0 }}"
-          placeholder="0 – 100"
-          class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
-        />
-      </div>
-      {% endfor %}
-
-      <div class="pt-4 border-t border-gray-100 flex justify-end">
+      <div class="mt-4 flex justify-end">
         <button type="submit"
           class="bg-primary text-white font-bold py-3 px-8 rounded-xl hover:bg-primary/90 transition-colors text-sm">
-          Guardar cambios
+          Guardar
         </button>
       </div>
-
     </form>
   </div>
 
