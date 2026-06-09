@@ -1,6 +1,6 @@
 """
-Descarga los límites municipales de la provincia de Alicante desde OpenStreetMap
-(Overpass API) y los guarda en static/alicante_municipios.geojson.
+Descarga las comarcas de la provincia de Alicante desde OpenStreetMap
+(admin_level=7) y las guarda en static/alicante_zonas.geojson.
 
 Uso: python scripts/descargar_geojson.py
 """
@@ -16,11 +16,11 @@ SERVIDORES = [
     "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
 ]
 
-# out geom incluye coordenadas directamente en cada member way
+# Comarcas (admin_level 7) de la provincia de Alicante — solo 9 polígonos, muy rápido
 QUERY = """
-[out:json][timeout:180];
+[out:json][timeout:60];
 area["ISO3166-2"="ES-A"]->.prov;
-relation["admin_level"="8"]["boundary"="administrative"](area.prov);
+relation["admin_level"="7"]["boundary"="administrative"](area.prov);
 out geom;
 """
 
@@ -74,13 +74,13 @@ def consultar(servidor):
     url = f"{servidor}?{params}"
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "TFG-AlicanteDig/1.0")
-    with urllib.request.urlopen(req, timeout=180) as resp:
+    with urllib.request.urlopen(req, timeout=90) as resp:
         return json.load(resp)
 
 
 def descargar():
     output = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), "..", "static", "alicante_municipios.geojson")
+        os.path.join(os.path.dirname(__file__), "..", "static", "alicante_zonas.geojson")
     )
 
     raw = None
@@ -101,46 +101,31 @@ def descargar():
     print(f"Recibidos {len(elements)} elementos de OSM.")
 
     features = []
-    sin_geom = []
-
     for elem in elements:
         if elem.get("type") != "relation":
             continue
-
         tags = elem.get("tags", {})
         nombre = tags.get("name", "")
         nombre_es = tags.get("name:es", "")
-        ref_ine = tags.get("ref:ine", "")
 
         ring = relation_a_poligono(elem.get("members", []))
         if not ring:
-            sin_geom.append(nombre_es or nombre or ref_ine)
+            print(f"  ⚠ Sin geometría: {nombre}")
             continue
 
         features.append({
             "type": "Feature",
-            "properties": {
-                "nombre": nombre,
-                "nombre_es": nombre_es,
-                "ref_ine": ref_ine
-            },
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [ring]
-            }
+            "properties": {"nombre": nombre, "nombre_es": nombre_es},
+            "geometry": {"type": "Polygon", "coordinates": [ring]}
         })
         print(f"  ✓ {nombre_es or nombre}")
 
     geojson = {"type": "FeatureCollection", "features": features}
-
     os.makedirs(os.path.dirname(output), exist_ok=True)
     with open(output, "w", encoding="utf-8") as f:
         json.dump(geojson, f, ensure_ascii=False)
 
-    print(f"\n✅ Guardado en: {output}")
-    print(f"   Municipios con geometría: {len(features)}")
-    if sin_geom:
-        print(f"   Sin geometría ({len(sin_geom)}): {', '.join(sin_geom)}")
+    print(f"\n✅ Guardado en: {output}  ({len(features)} comarcas)")
 
 
 if __name__ == "__main__":

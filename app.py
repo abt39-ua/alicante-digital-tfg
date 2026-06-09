@@ -312,9 +312,32 @@ def _normalizar(nombre):
     return n
 
 
+# Palabras clave para mapear nombre OSM de comarca -> nombre de ZONA del código
+_COMARCA_A_ZONA = {
+    "alacanti":   "L'Alacantí",
+    "vinalopo":   "Vinalopó",
+    "vinalop":    "Vinalopó",
+    "vega baja":  "Vega Baja",
+    "segura":     "Vega Baja",
+    "marina alta":"Marina Alta",
+    "marina baixa":"Marina Baixa",
+    "marina baja":"Marina Baixa",
+    "alcoia":     "Interior / Alcoià – Comtat",
+    "alcoy":      "Interior / Alcoià – Comtat",
+    "comtat":     "Interior / Alcoià – Comtat",
+}
+
+def _comarca_a_zona(nombre_osm):
+    n = _normalizar(nombre_osm)
+    for clave, zona in _COMARCA_A_ZONA.items():
+        if clave in n:
+            return zona
+    return None
+
+
 @app.route("/api/municipios-geojson")
 def municipios_geojson():
-    geojson_path = os.path.join(app.root_path, "static", "alicante_municipios.geojson")
+    geojson_path = os.path.join(app.root_path, "static", "alicante_zonas.geojson")
     if not os.path.exists(geojson_path):
         return jsonify({"error": "Ejecuta primero: python scripts/descargar_geojson.py"}), 404
 
@@ -328,36 +351,10 @@ def municipios_geojson():
         valores = [a.nivel_digitalizacion for a in registros if a.nivel_digitalizacion is not None]
         zona_nivel[zona_nombre] = round(sum(valores) / len(valores), 2) if valores else None
 
-    # Lookup inverso: nombre_normalizado -> nombre_zona
-    muni_a_zona = {}
-    for zona_nombre, municipios_zona in ZONAS.items():
-        for muni in municipios_zona:
-            muni_a_zona[_normalizar(muni)] = zona_nombre
-
     for feature in geojson.get("features", []):
         props = feature["properties"]
-        zona_nombre = None
-
-        for campo in ("nombre_es", "nombre"):
-            candidato = props.get(campo, "")
-            if not candidato:
-                continue
-            for parte in candidato.split("/"):
-                clave = _normalizar(parte.strip())
-                if clave in muni_a_zona:
-                    zona_nombre = muni_a_zona[clave]
-                    break
-            if zona_nombre:
-                break
-
-        # Fallback: coincidencia parcial
-        if not zona_nombre:
-            geo_norm = _normalizar(props.get("nombre_es") or props.get("nombre", ""))
-            for n_muni, z in muni_a_zona.items():
-                if geo_norm and (geo_norm in n_muni or n_muni in geo_norm):
-                    zona_nombre = z
-                    break
-
+        nombre_osm = props.get("nombre_es") or props.get("nombre", "")
+        zona_nombre = _comarca_a_zona(nombre_osm)
         props["zona"] = zona_nombre
         props["nivel"] = zona_nivel.get(zona_nombre) if zona_nombre else None
 
