@@ -1,141 +1,284 @@
 <!DOCTYPE html>
-<html lang="es"><head>
+<html lang="es">
+<head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Alicante Digital - Actualizar datos del municipio</title>
-<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<title>Alicante Digital – Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   tailwind.config = {
-    darkMode: "class",
     theme: {
       extend: {
         colors: {
           "primary": "#1193d4",
           "background-light": "#f6f7f8",
-          "background-dark": "#101c22",
         },
-        fontFamily: {
-          "display": ["Public Sans"]
-        },
-        borderRadius: {
-          "DEFAULT": "0.25rem",
-          "lg": "0.5rem",
-          "xl": "0.75rem",
-          "full": "9999px"
-        },
-      },
-    },
-    plugins: []
+        fontFamily: { "display": ["Public Sans"] },
+      }
+    }
   };
 </script>
-<style>
-        .form-input, .form-textarea {
-            --tw-ring-color: transparent !important;
-        }
-    </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark font-display">
-<div class="flex flex-col min-h-screen">
-<header class="bg-background-light dark:bg-background-dark border-b border-black/10 dark:border-white/10 sticky top-0 z-10">
-<div class="container mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex items-center justify-between h-16">
-<a href="/" class="flex items-center gap-3 text-primary hover:opacity-80 transition">
-    <svg class="h-8 w-8 text-primary" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-        <path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path>
-        <path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path>
-    </svg>
-    <h1 class="text-xl font-bold">Alicante Digital</h1>
-</a>
+<body class="bg-background-light font-display text-gray-800">
 
-<nav class="hidden md:flex items-center gap-6">
-<a class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">Panel</a>
-<a class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">Proyectos</a>
-<a class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">Municipios</a>
-<a class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors" href="#">Informes</a>
-</nav>
-<div class="flex items-center gap-4">
-<button class="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-700/50 hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-<svg fill="currentColor" height="20" viewBox="0 0 256 256" width="20" xmlns="http://www.w3.org/2000/svg">
-<path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path>
-</svg>
-</button>
-<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC-_IcATejjT3S2eGjdCbSex7zFMkctpXEmcOEPlcYVIPCOa4sUVsM8H3rWfLD-dH-3icdj_4tAfedSZaCMMXjkbIagVBryF5hyzWtWYeW5SvcLMk9E49Dh_w-bylyP1zK4Lt478wK2YHRIYFw4s4reN8f13qGt-0QVRt-Yuf2lb7MVyYETGLrfCVV8hTnOOIzY9Rb4Tofpm1mYQxPjigDyYDsvlWOtpWaCbc4ycbnTZ3I33K_kSd4M3hArgOF0mDm6nNR10zh6eAoW");'></div>
-</div>
-</div>
-</div>
+<!-- HEADER -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+  <div class="container mx-auto px-6">
+    <div class="flex items-center justify-between h-16">
+      <a href="/" class="flex items-center gap-3 text-primary hover:opacity-80 transition">
+        <svg class="h-8 w-8" fill="none" viewBox="0 0 48 48">
+          <path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"/>
+          <path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"/>
+        </svg>
+        <span class="text-xl font-bold">Alicante Digital</span>
+      </a>
+      <a href="/logout" class="text-sm text-gray-500 hover:text-red-500 transition font-medium">Cerrar sesión</a>
+    </div>
+  </div>
 </header>
-<main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-<div class="max-w-2xl mx-auto">
-<div class="mb-8">
-<h2 class="text-3xl font-bold text-slate-900 dark:text-white">Actualización de los datos de digitalización de tu municipio</h2>
-<p class="mt-2 text-slate-600 dark:text-slate-400">Introduce los datos actualizados de tu municipio.</p>
-</div>
-<form method="post" class="space-y-6">
-  <div>
-    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
-      {{ ayto.nombre }} ({{ ayto.codigo }})
-    </h2>
-    <p class="text-3xl font-extrabold text-primary">
-      Nivel de digitalización: {{ nivel_digitalizacion }}
-    </p>
-    <p class="mt-1 text-slate-600 dark:text-slate-400">
-      Actualiza la información digital del municipio.
-    </p>
-    {% if msg %}
-      <div class="mt-3 p-3 rounded bg-green-50 text-green-800">{{ msg }}</div>
-    {% endif %}
+
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 max-w-5xl">
+
+  <!-- TÍTULO -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-extrabold text-gray-900">{{ ayto.nombre }}</h1>
+    <p class="text-gray-500 mt-1">Panel de control · Código <span class="font-mono font-semibold">{{ ayto.codigo }}</span></p>
   </div>
 
-  <!-- Desplegable 1 -->
-  <div>
-    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Campo 1</label>
-    <select id="p1" name="col1" class="...">
-    <option value="">Seleccione una opción</option>
-    {% for col in p_columns %}
-        <option value="{{ col }}" {% if current.get(col) %}selected{% endif %}>{{ col }}</option>
+  <!-- FLASH -->
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in msgs %}
+      <div class="mb-6 p-4 rounded-xl text-sm font-medium
+        {% if cat == 'error' %}bg-red-50 text-red-700 border border-red-200
+        {% else %}bg-green-50 text-green-700 border border-green-200{% endif %}">
+        {{ msg }}
+      </div>
     {% endfor %}
-    </select>
+  {% endwith %}
 
-    <textarea name="val1">{{ current.get(col1_name) if current else '' }}</textarea>
+  <!-- STAT CARDS -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+      <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Municipio</p>
+      <p class="text-2xl font-bold text-gray-900">{{ ayto.nombre }}</p>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+      <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Nivel de digitalización</p>
+      <p class="text-2xl font-bold text-primary">{{ ayto.nivel_digitalizacion | round(1) }}%</p>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+      <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Código</p>
+      <p class="text-2xl font-bold font-mono text-gray-900">{{ ayto.codigo }}</p>
+    </div>
   </div>
 
-  <!-- Desplegable 2 -->
-  <div>
-    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Campo 2 (opcional)</label>
-    <select name="col2" class="form-input w-full rounded-lg ...">
-      <option value="">-- Selecciona una columna --</option>
-      {% for c in p_columns %}
-        <option value="{{ c }}">{{ c }}</option>
+  <!-- GRÁFICOS (iguales que /municipio) -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+
+    <!-- RADAR COMPARATIVA -->
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+      <h3 class="text-lg font-semibold mb-2">Comparativa de digitalización</h3>
+      <p class="text-xs text-gray-400 mb-4">Tu municipio frente a los mejores y peores de la provincia.</p>
+      <div id="comparativaControles" class="flex flex-wrap gap-2 mb-4"></div>
+      <div class="relative h-80">
+        <canvas id="comparativaChart"></canvas>
+      </div>
+    </div>
+
+    <!-- TOP 5 -->
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+      <h3 class="text-lg font-semibold mb-4">Top 5 municipios</h3>
+      <div class="overflow-x-auto rounded-lg border border-gray-100">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 font-semibold text-gray-600">Municipio</th>
+              <th class="px-4 py-3 font-semibold text-gray-600">Nivel</th>
+              <th class="px-4 py-3 font-semibold text-gray-600">Puesto</th>
+            </tr>
+          </thead>
+          <tbody id="top5TableBody" class="divide-y divide-gray-100">
+            <tr><td class="px-4 py-3 text-gray-400" colspan="3">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FORMULARIO ÚNICO -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+    <h2 class="text-xl font-bold text-gray-900 mb-1">Actualizar datos de digitalización</h2>
+    <p class="text-sm text-gray-400 mb-8">Ajusta los valores de cada área (0–100). El nivel total se recalcula automáticamente.</p>
+
+    <form method="POST" class="space-y-6">
+
+      {% set areas = [
+        ("comunicaciones",  "Infraestructura de comunicaciones",  ayto.comunicaciones),
+        ("backoffice",      "Digitalización interna",             ayto.backoffice),
+        ("puestos_trabajo", "Puestos de trabajo digitales",       ayto.puestos_trabajo),
+        ("frontoffice",     "Servicios digitales al ciudadano",   ayto.frontoffice),
+        ("smart_city",      "Ciudad inteligente",                 ayto.smart_city),
+        ("dti",             "Destino Turístico Inteligente (DTI)",ayto.dti),
+        ("planes",          "Planificación estratégica",          ayto.planes),
+      ] %}
+
+      {% for campo, etiqueta, valor in areas %}
+      <div>
+        <div class="flex justify-between items-center mb-1">
+          <label for="{{ campo }}" class="text-sm font-medium text-gray-700">{{ etiqueta }}</label>
+          <span id="val_{{ campo }}" class="text-sm font-bold text-primary">{{ valor | round(1) if valor else 0 }}%</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <input
+            type="range" min="0" max="100" step="0.1"
+            name="{{ campo }}"
+            id="{{ campo }}"
+            value="{{ valor | round(1) if valor else 0 }}"
+            class="flex-1 h-2 rounded-lg accent-primary cursor-pointer"
+            oninput="document.getElementById('val_{{ campo }}').textContent = parseFloat(this.value).toFixed(1) + '%'"
+          />
+          <input
+            type="number" min="0" max="100" step="0.1"
+            value="{{ valor | round(1) if valor else 0 }}"
+            class="w-20 text-center rounded-lg border border-gray-200 py-1.5 text-sm focus:border-primary focus:ring-primary focus:outline-none"
+            oninput="
+              const s = document.getElementById('{{ campo }}');
+              s.value = this.value;
+              document.getElementById('val_{{ campo }}').textContent = parseFloat(this.value || 0).toFixed(1) + '%';
+            "
+          />
+        </div>
+      </div>
       {% endfor %}
-    </select>
-    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mt-3 mb-1.5">Valor</label>
-    <textarea name="val2" rows="2" class="form-textarea w-full rounded-lg ..."></textarea>
+
+      <div class="pt-4 border-t border-gray-100 flex justify-end">
+        <button type="submit"
+          class="bg-primary text-white font-bold py-3 px-8 rounded-xl hover:bg-primary/90 transition-colors text-sm">
+          Guardar cambios
+        </button>
+      </div>
+
+    </form>
   </div>
 
-  <!-- Desplegable 3 -->
-  <div>
-    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Campo 3 (opcional)</label>
-    <select name="col3" class="form-input w-full rounded-lg ...">
-      <option value="">-- Selecciona una columna --</option>
-      {% for c in p_columns %}
-        <option value="{{ c }}">{{ c }}</option>
-      {% endfor %}
-    </select>
-    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mt-3 mb-1.5">Valor</label>
-    <textarea name="val3" rows="2" class="form-textarea w-full rounded-lg ..."></textarea>
-  </div>
-
-  <div class="flex justify-end pt-4">
-    <button type="submit" class="bg-primary text-white font-bold py-2 px-6 rounded-lg hover:bg-primary/90">
-      Guardar cambios
-    </button>
-  </div>
-</form>
-
-</div>
 </main>
-</div>
 
-</body></html>
+<script>
+const NOMBRE = "{{ ayto.nombre }}";
+let chartInstance = null;
+
+async function cargarComparativa() {
+  const res  = await fetch("/api/comparativa/" + encodeURIComponent(NOMBRE));
+  const data = await res.json();
+
+  const campos   = ["comunicaciones","backoffice","puestos","frontoffice","smart","dti","planes"];
+  const etiquetas = ["Comunicaciones","Digit. interna","Puestos trabajo","Servicios ciudadano","Ciudad inteligente","DTI","Planes"];
+
+  const comparadores = [];
+  const porNombre    = new Map();
+
+  function reg(obj, rol) {
+    if (!obj?.nombre) return;
+    let c = porNombre.get(obj.nombre);
+    if (!c) { c = { ...obj, roles: [] }; porNombre.set(obj.nombre, c); comparadores.push(c); }
+    if (!c.roles.includes(rol)) c.roles.push(rol);
+  }
+
+  reg(data.actual, "Actual");
+  data.top.forEach((t, i) => reg(t, "Mayor " + (i + 1)));
+  data.bottom.forEach((b, i) => reg(b, "Menor " + (i + 1)));
+
+  const palette = [
+    { border: "#1193d4", bg: "rgba(17,147,212,0.18)" },
+    { border: "#f97316", bg: "rgba(249,115,22,0.18)" },
+    { border: "#ef4444", bg: "rgba(239,68,68,0.18)" },
+    { border: "#10b981", bg: "rgba(16,185,129,0.18)" },
+    { border: "#f59e0b", bg: "rgba(245,158,11,0.18)" },
+  ];
+
+  const datasets = comparadores.map((c, i) => {
+    const col    = palette[i % palette.length];
+    const actual = c.roles.includes("Actual");
+    const bottom = !actual && c.roles.some(r => r.startsWith("Menor"));
+    return {
+      label: c.nombre,
+      data: campos.map(k => c[k] || 0),
+      borderColor: col.border,
+      backgroundColor: col.bg,
+      pointBackgroundColor: col.border,
+      pointBorderColor: "#fff",
+      borderWidth: actual ? 4 : 3,
+      borderDash: bottom ? [6,4] : [],
+      fill: true,
+      customRoles: c.roles,
+    };
+  });
+
+  if (chartInstance) chartInstance.destroy();
+
+  chartInstance = new Chart(document.getElementById("comparativaChart"), {
+    type: "radar",
+    data: { labels: etiquetas, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          min: 0, max: 100,
+          ticks: { stepSize: 20, backdropColor: "transparent" },
+          grid: { color: "rgba(148,163,184,0.25)" },
+          angleLines: { color: "rgba(148,163,184,0.22)" },
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label + ": " + ctx.formattedValue + "%",
+            footer: items => (items[0]?.dataset.customRoles || []).join(" / "),
+          }
+        }
+      }
+    }
+  });
+
+  // Controles
+  const cont = document.getElementById("comparativaControles");
+  cont.innerHTML = "";
+  comparadores.forEach((c, i) => {
+    const col = palette[i % palette.length];
+    const lbl = document.createElement("label");
+    lbl.className = "flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 cursor-pointer text-xs font-medium";
+    const cb  = document.createElement("input");
+    cb.type = "checkbox"; cb.checked = true;
+    cb.className = "h-3.5 w-3.5 accent-primary";
+    const dot = document.createElement("span");
+    dot.className = "h-2.5 w-2.5 rounded-full flex-shrink-0";
+    dot.style.backgroundColor = col.border;
+    lbl.appendChild(cb);
+    lbl.appendChild(dot);
+    lbl.appendChild(document.createTextNode(c.nombre + " (" + c.roles.join("/") + ")"));
+    cb.addEventListener("change", () => { chartInstance.setDatasetVisibility(i, cb.checked); chartInstance.update(); lbl.style.opacity = cb.checked ? "1" : "0.5"; });
+    cont.appendChild(lbl);
+  });
+
+  // Top 5
+  const tbody = document.getElementById("top5TableBody");
+  tbody.innerHTML = data.top5.map((m, i) => `
+    <tr>
+      <td class="px-4 py-3 font-medium">${m.nombre}</td>
+      <td class="px-4 py-3 text-primary font-bold">${m.nivel}%</td>
+      <td class="px-4 py-3 text-gray-400">${i + 1}</td>
+    </tr>
+  `).join("");
+}
+
+cargarComparativa();
+</script>
+
+</body>
+</html>

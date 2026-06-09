@@ -111,19 +111,21 @@ def panel():
     ayto = Ayuntamiento.query.get(session["ayuntamiento_id"])
 
     if request.method == "POST":
+        campos = ["comunicaciones", "backoffice", "puestos_trabajo", "frontoffice", "smart_city", "dti", "planes"]
+        for campo in campos:
+            val = request.form.get(campo)
+            if val is not None:
+                try:
+                    setattr(ayto, campo, float(val))
+                except ValueError:
+                    pass
+        valores = [getattr(ayto, c) for c in campos if getattr(ayto, c) is not None]
+        if valores:
+            ayto.nivel_digitalizacion = round(sum(valores) / len(valores), 2)
+        db.session.commit()
+        flash("Datos actualizados correctamente", "success")
 
-        nuevo_nivel = request.form.get("nivel_digitalizacion")
-
-        if nuevo_nivel:
-            ayto.nivel_digitalizacion = int(nuevo_nivel)
-            db.session.commit()
-            flash("Datos actualizados correctamente", "success")
-
-    return render_template(
-        "dashboard.html",
-        ayto=ayto,
-        nivel_digitalizacion=ayto.nivel_digitalizacion
-    )
+    return render_template("dashboard.html", ayto=ayto)
 
 
 @app.route("/logout")
