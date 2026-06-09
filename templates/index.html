@@ -249,11 +249,12 @@ if (geoRes.ok) {
 
     L.geoJSON(geojson, {
         style: function(feature) {
+            const color = getColor(feature.properties.nivel);
             return {
-                fillColor: getColor(feature.properties.nivel),
+                fillColor: color,
                 weight: 1,
                 opacity: 1,
-                color: "#ffffff",
+                color: color,
                 fillOpacity: 0.75
             };
         },
