@@ -1,3 +1,7 @@
+import json
+import os
+import unicodedata
+
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from models import db, Ayuntamiento
 from config import Config
@@ -300,6 +304,59 @@ def digitalizacion_por_zonas():
 
     return jsonify(resultado)
 
+def _normalizar(nombre):
+    """Lowercase + sin acentos para comparación de nombres de municipio."""
+    n = nombre.lower().strip()
+    n = unicodedata.normalize("NFD", n)
+    n = "".join(c for c in n if unicodedata.category(c) != "Mn")
+    return n
+
+
+@app.route("/api/municipios-geojson")
+def municipios_geojson():
+    geojson_path = os.path.join(app.root_path, "static", "alicante_municipios.geojson")
+    if not os.path.exists(geojson_path):
+        return jsonify({"error": "Ejecuta primero: python scripts/descargar_geojson.py"}), 404
+
+    with open(geojson_path, "r", encoding="utf-8") as f:
+        geojson = json.load(f)
+
+    # Diccionario nombre_normalizado -> nivel
+    lookup = {}
+    for a in Ayuntamiento.query.all():
+        if a.nivel_digitalizacion is not None:
+            lookup[_normalizar(a.nombre)] = round(a.nivel_digitalizacion, 2)
+
+    for feature in geojson.get("features", []):
+        props = feature["properties"]
+        nivel = None
+
+        # Probar nombre_es y nombre (OSM puede usar "Alacant/Alicante")
+        for campo in ("nombre_es", "nombre"):
+            candidato = props.get(campo, "")
+            if not candidato:
+                continue
+            for parte in candidato.split("/"):
+                clave = _normalizar(parte.strip())
+                if clave in lookup:
+                    nivel = lookup[clave]
+                    break
+            if nivel is not None:
+                break
+
+        # Fallback: coincidencia parcial
+        if nivel is None:
+            geo_norm = _normalizar(props.get("nombre_es") or props.get("nombre", ""))
+            for n_db, v in lookup.items():
+                if geo_norm and (geo_norm in n_db or n_db in geo_norm):
+                    nivel = v
+                    break
+
+        props["nivel"] = nivel
+
+    return jsonify(geojson)
+
+
 @app.route("/api/municipios")
 def municipios():
 
@@ -449,8 +506,8 @@ def cargar_coords():
 # CREAR TABLAS
 ############################################
 
-##with app.app_context():
-  ##  db.create_all()
+with app.app_context():
+    db.create_all()
 
 
 ############################################

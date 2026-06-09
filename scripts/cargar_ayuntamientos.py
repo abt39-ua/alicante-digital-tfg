@@ -1,8 +1,3 @@
-"""
-Carga completa de ayuntamientos desde Sensitivity_Analysis.xlsx
-Versión ROBUSTA para TFG serio.
-"""
-
 import sys
 import os
 
@@ -17,7 +12,7 @@ from app import app
 from models import db, Ayuntamiento
 
 
-# ✅ Ruta REAL al excel (nunca falla)
+# Ruta REAL al excel
 EXCEL_FILE = os.path.join(BASE_DIR, "Sensitivity_Analysis.xlsx")
 
 
@@ -56,14 +51,13 @@ def run():
 
     df = pd.read_excel(EXCEL_FILE)
 
-    # 🔥 Limpia columnas invisibles del Excel
     df.columns = df.columns.str.strip()
 
-    print("\n📥 Cargando ayuntamientos desde Excel...\n")
+    print("\Cargando ayuntamientos desde Excel...\n")
 
     with app.app_context():
 
-        # ⚠️ BORRA TODO (esto está bien para seeds)
+        #  BORRA TODO (esto está bien para seeds)
         db.session.query(Ayuntamiento).delete()
         db.session.commit()
 
@@ -98,14 +92,14 @@ def run():
 
         db.session.commit()
 
-    print("✅ Importación completada\n")
+    print(" Importación completada\n")
 
-    print("🔑 CREDENCIALES GENERADAS:\n")
+    print(" CREDENCIALES GENERADAS:\n")
 
     for c in credenciales:
         print(f"{c['codigo']} | {c['nombre']} | {c['password']}")
 
-    print("\n💾 Guarda estas contraseñas.\n")
+    print("\n Guarda estas contraseñas.\n")
 
 
 if __name__ == "__main__":

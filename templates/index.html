@@ -228,39 +228,64 @@ media.max.nombre + " (" + media.max.valor + "%)";
 
 
 
-/*************** MAPA REAL ***************/
-const map = L.map('map').setView([38.3452,-0.481],9);
+/*************** MAPA COROPLÉTICO ***************/
+const map = L.map('map').setView([38.55, -0.50], 9);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-maxZoom:19
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
 }).addTo(map);
 
-const resMunicipios = await fetch("/api/municipios");
-const municipios = await resMunicipios.json();
-
-function getColor(nivel){
-    if(nivel < 50) return "red";
-    if(nivel < 70) return "orange";
-    return "green";
+function getColor(nivel) {
+    if (nivel === null || nivel === undefined) return "#d1d5db";
+    if (nivel < 45) return "#ef4444";
+    if (nivel < 65) return "#f59e0b";
+    return "#22c55e";
 }
 
-municipios.forEach(m => {
+const geoRes = await fetch("/api/municipios-geojson");
+if (geoRes.ok) {
+    const geojson = await geoRes.json();
 
-    const marcador = L.circleMarker([m.lat, m.lon], {
-        radius: 8,
-        color: getColor(m.nivel),
-        fillOpacity: 0.8
+    L.geoJSON(geojson, {
+        style: function(feature) {
+            return {
+                fillColor: getColor(feature.properties.nivel),
+                weight: 1,
+                opacity: 1,
+                color: "#ffffff",
+                fillOpacity: 0.75
+            };
+        },
+        onEachFeature: function(feature, layer) {
+            const nombre = feature.properties.nombre_es || feature.properties.nombre;
+            const nivel  = feature.properties.nivel;
+            const texto  = nivel !== null && nivel !== undefined
+                ? `<b>${nombre}</b><br>${nivel.toFixed(1)}% digitalización`
+                : `<b>${nombre}</b><br>Sin datos`;
+            layer.bindTooltip(texto, { direction: "top" });
+            layer.on("click", function() {
+                window.location.href = "/municipio/" + encodeURIComponent(nombre);
+            });
+        }
     }).addTo(map);
 
-    marcador.bindTooltip(
-        `<b>${m.nombre}</b><br>${m.nivel}% digitalización`,
-        {
-            direction: "top",
-            offset: [0, -10]
-        }
-    );
-
-});
+    // Leyenda
+    const leyenda = L.control({ position: "bottomright" });
+    leyenda.onAdd = function() {
+        const div = L.DomUtil.create("div");
+        div.style.cssText = "background:white;padding:8px 12px;border-radius:8px;font-size:12px;line-height:2;box-shadow:0 2px 6px rgba(0,0,0,0.15)";
+        div.innerHTML = `
+            <b style="display:block;margin-bottom:4px">Nivel de madurez</b>
+            <span style="color:#22c55e;font-size:16px">■</span> Alto (&gt;65%)<br>
+            <span style="color:#f59e0b;font-size:16px">■</span> Medio (45–65%)<br>
+            <span style="color:#ef4444;font-size:16px">■</span> Bajo (&lt;45%)<br>
+            <span style="color:#d1d5db;font-size:16px">■</span> Sin datos
+        `;
+        return div;
+    };
+    leyenda.addTo(map);
+}
 
 
 /*************** DISTRIBUCION ***************/

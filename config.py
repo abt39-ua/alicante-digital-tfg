@@ -18,6 +18,9 @@ class Config:
             )
 
         SQLALCHEMY_DATABASE_URI = DATABASE_URL
+        SQLALCHEMY_ENGINE_OPTIONS = {
+            "connect_args": {"sslmode": "require"}
+        }
 
     else:
         SQLALCHEMY_DATABASE_URI = "sqlite:///local.db"
