@@ -321,38 +321,45 @@ def municipios_geojson():
     with open(geojson_path, "r", encoding="utf-8") as f:
         geojson = json.load(f)
 
-    # Diccionario nombre_normalizado -> nivel
-    lookup = {}
-    for a in Ayuntamiento.query.all():
-        if a.nivel_digitalizacion is not None:
-            lookup[_normalizar(a.nombre)] = round(a.nivel_digitalizacion, 2)
+    # Media por zona
+    zona_nivel = {}
+    for zona_nombre, municipios_zona in ZONAS.items():
+        registros = Ayuntamiento.query.filter(Ayuntamiento.nombre.in_(municipios_zona)).all()
+        valores = [a.nivel_digitalizacion for a in registros if a.nivel_digitalizacion is not None]
+        zona_nivel[zona_nombre] = round(sum(valores) / len(valores), 2) if valores else None
+
+    # Lookup inverso: nombre_normalizado -> nombre_zona
+    muni_a_zona = {}
+    for zona_nombre, municipios_zona in ZONAS.items():
+        for muni in municipios_zona:
+            muni_a_zona[_normalizar(muni)] = zona_nombre
 
     for feature in geojson.get("features", []):
         props = feature["properties"]
-        nivel = None
+        zona_nombre = None
 
-        # Probar nombre_es y nombre (OSM puede usar "Alacant/Alicante")
         for campo in ("nombre_es", "nombre"):
             candidato = props.get(campo, "")
             if not candidato:
                 continue
             for parte in candidato.split("/"):
                 clave = _normalizar(parte.strip())
-                if clave in lookup:
-                    nivel = lookup[clave]
+                if clave in muni_a_zona:
+                    zona_nombre = muni_a_zona[clave]
                     break
-            if nivel is not None:
+            if zona_nombre:
                 break
 
         # Fallback: coincidencia parcial
-        if nivel is None:
+        if not zona_nombre:
             geo_norm = _normalizar(props.get("nombre_es") or props.get("nombre", ""))
-            for n_db, v in lookup.items():
-                if geo_norm and (geo_norm in n_db or n_db in geo_norm):
-                    nivel = v
+            for n_muni, z in muni_a_zona.items():
+                if geo_norm and (geo_norm in n_muni or n_muni in geo_norm):
+                    zona_nombre = z
                     break
 
-        props["nivel"] = nivel
+        props["zona"] = zona_nombre
+        props["nivel"] = zona_nivel.get(zona_nombre) if zona_nombre else None
 
     return jsonify(geojson)
 

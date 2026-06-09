@@ -258,15 +258,12 @@ if (geoRes.ok) {
             };
         },
         onEachFeature: function(feature, layer) {
-            const nombre = feature.properties.nombre_es || feature.properties.nombre;
-            const nivel  = feature.properties.nivel;
-            const texto  = nivel !== null && nivel !== undefined
-                ? `<b>${nombre}</b><br>${nivel.toFixed(1)}% digitalización`
-                : `<b>${nombre}</b><br>Sin datos`;
+            const zona  = feature.properties.zona;
+            const nivel = feature.properties.nivel;
+            const texto = zona
+                ? `<b>${zona}</b><br>${nivel !== null && nivel !== undefined ? nivel.toFixed(1) + "% digitalización" : "Sin datos"}`
+                : `<b>${feature.properties.nombre_es || feature.properties.nombre}</b><br>Sin zona asignada`;
             layer.bindTooltip(texto, { direction: "top" });
-            layer.on("click", function() {
-                window.location.href = "/municipio/" + encodeURIComponent(nombre);
-            });
         }
     }).addTo(map);
 
